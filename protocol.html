@@ -47,7 +47,7 @@ h1 > a, h2 > a, h3 > a, h4 > a {
     list-style: none;
 }
 
-.jsondesc > ul > li ul {
+.jsondesc > li ul {
     padding-left: 0px;
     margin-left: 2px;
 }
@@ -94,8 +94,6 @@ h1 > a, h2 > a, h3 > a, h4 > a {
 
 .jsondesc ul {
     position: relative;
-    margin-left: 8px;
-    padding-left: 14px;
 }
 
 /*.jsondesc ul:before {
@@ -108,11 +106,11 @@ h1 > a, h2 > a, h3 > a, h4 > a {
     border-left: 1px solid #000000;
 }*/
 
-.jsondesc > ul li {
+.jsondesc > li > ul li {
     position: relative;
 }
 
-.jsondesc > ul li:before {
+.jsondesc > li > ul li:before {
     content: '';
     position: absolute;
     top: 12px;
@@ -122,7 +120,7 @@ h1 > a, h2 > a, h3 > a, h4 > a {
     border-bottom: 1px solid #000000;
 }
 
-.jsondesc > ul li:after {
+.jsondesc > li > ul li:after {
     content: '';
     position: absolute;
     top: 0px;
@@ -131,7 +129,7 @@ h1 > a, h2 > a, h3 > a, h4 > a {
     border-left: 1px solid #000000;
 }
 
-.jsondesc > ul li:last-child:after {
+.jsondesc > li > ul li:last-child:after {
     height: 13px;
     bottom: initial;
 }
@@ -168,39 +166,42 @@ These are the response statuses alone with their respective HTTP response codes 
 
 <h4><a id="rest-standard-response-payload" href="#rest-standard-response-payload">Standard response payload</a></h4>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="array"><b>data</b> - Varies across different endpoints.</li>
-    <li class="object"><b>meta</b> - Unknown. Seems to be always empty.</li>
-    <li class="string"><b>status</b> - Status code. <i class="string">ok</i> if request was successfully completed, other values vary across different endpoints.</li>
-    <li class="float"><b>time</b> - Time it took to complete the request in <b>TODO</b>.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="array"><b>data</b> - Varies across different endpoints.</li>
+      <li class="object"><b>meta</b> - Unknown. Seems to be always empty.</li>
+      <li class="string"><b>status</b> - Status code. <i class="string">ok</i> if request was successfully completed, other values vary across different endpoints.</li>
+      <li class="float"><b>time</b> - Time it took to complete the request in <b>TODO</b>.</li>
+    </ul>
+  </li>
 </ul>
 
 Below this is the format used to describe different <i>data</i> contents depending on <i>status</i>:
 <ul class="jsondesc">
-  <li class="array"><b>ok 200</b> - Status code this payload description corresponds to followed by HTTP response code.</li>
-  <ul>
-    <li class="object">Root object.
-      <ul>
-        <li class="string"><b>fieldName</b> - Description describing it's purpose. Icon represents the type of that field. Example below.</li>
-        <li class="integer"><b>currentDJ</b> - Current DJ's user ID.</li>
-      </ul>
-    </li>
-  </ul>
-  <li class="array"><b>anotherStatusCode 403</b> - Another status code.</li>
-  <ul>
-    <li class="object">Object #1
-      <ul>
-        <li class="boolean"><b>booleanValue</b> - <i class="boolean">true</i> if something, <i class="boolean">false</i> otherwise.</li>
-      </ul>
-    </li>
-    <li class="object">Object #2
-      <ul>
-        <li class="string">...</li>
-      </ul>
-    </li>
-  </ul>
+  <li class="array"><b>ok 200</b> - Status code this payload description corresponds to followed by HTTP response code.
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="string"><b>fieldName</b> - Description describing it's purpose. Icon represents the type of that field. Example below.</li>
+          <li class="integer"><b>currentDJ</b> - Current DJ's user ID.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>anotherStatusCode 403</b> - Another status code.
+    <ul>
+      <li class="object">Object #1
+        <ul>
+          <li class="boolean"><b>booleanValue</b> - <i class="boolean">true</i> if something, <i class="boolean">false</i> otherwise.</li>
+        </ul>
+      </li>
+      <li class="object">Object #2
+        <ul>
+          <li class="string">...</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li class="array"><b>yetAnotherOne 400</b> - One more status code, this time with empty <i>data</i> array.</li>
 </ul>
 
@@ -214,28 +215,32 @@ Used for authenticating user using Plug.dj account.
 
 <h4><a id="rest-post-auth-login-request" href="#rest-post-auth-login-request">Request payload</a></h4>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="string"><b>csrf</b> - A string retrieved from rooms HTML. More about CSRF on <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">Wikipedia</a>.</li>
-    <li class="string"><b>email</b> - User's email.</li>
-    <li class="string"><b>password</b> - User's password.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>csrf</b> - A string retrieved from rooms HTML. More about CSRF on <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">Wikipedia</a>.</li>
+      <li class="string"><b>email</b> - User's email.</li>
+      <li class="string"><b>password</b> - User's password.</li>
+    </ul>
+  </li>
 </ul>
 
 <h4><a id="rest-post-auth-login-response" href="#rest-post-auth-login-response">Response payload</a></h4>
 <ul class="jsondesc">
-  <li class="array"><b>ok 200</b></li>
-  <ul>
-    <li class="object">Users object. See <a href="#rest-get-users-1-response">GET users/$1 <b class="code">ok 200</b> response payload</a>.</li>
-  </ul>
-  <li class="array"><b>csrfTokenExpired 403</b> - CRSF token not specified, invalid or expired.</li>
-  <ul>
-    <li class="string"><i class="string">This CSRF token has expired.</i></li>
-  </ul>
-  <li class="array"><b>requestError 400</b> - Missing <b class="code">email</b> or <b class="code">password</b> fields in request payload.</li>
-  <ul>
-    <li class="string"><i class="string">email is required</i> or <i class="string">password is required</i></li>
-  </ul>
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Users object. See <a href="#rest-get-users-1-response">GET users/$1 <b class="code">ok 200</b> response payload</a>.</li>
+    </ul>
+  </li>
+  <li class="array"><b>csrfTokenExpired 403</b> - CRSF token not specified, invalid or expired.
+    <ul>
+      <li class="string"><i class="string">This CSRF token has expired.</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">email</b> or <b class="code">password</b> fields in request payload.
+    <ul>
+      <li class="string"><i class="string">email is required</i> or <i class="string">password is required</i></li>
+    </ul>
+  </li>
   <li class="array"><b>badLogin 401</b> - Invalid email and password combination.</li>
 </ul>
 
@@ -273,20 +278,21 @@ Returns all public data about requested user.
 
 <h4><a id="rest-get-users-1-response" href="#rest-get-users-1-response">Response payload</a></h4>
 <ul class="jsondesc">
-  <li class="array"><b>ok 200</b></li>
-  <ul>
-    <li class="string"><b>avatarID</b> - User's avatar ID.</li>
-    <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
-    <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
-    <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
-    <li class="integer"><b>id</b> - User's ID.</li>
-    <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
-    <li class="integer"><b>level</b> - User's experience level.</li>
-    <li class="array"><b>pVibes</b> - Unknown <b>TODO</b>.</li>
-    <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
-    <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
-    <li class="string"><b>username</b> - User's name. May change.</li>
-  </ul>
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="string"><b>avatarID</b> - User's avatar ID.</li>
+      <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
+      <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
+      <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
+      <li class="integer"><b>id</b> - User's ID.</li>
+      <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
+      <li class="integer"><b>level</b> - User's experience level.</li>
+      <li class="array"><b>pVibes</b> - Unknown <b>TODO</b>.</li>
+      <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
+      <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
+      <li class="string"><b>username</b> - User's name. May change.</li>
+    </ul>
+  </li>
   <li class="array"><b>notFound 404</b> - User with requested ID doesn't exist.</li>
 </ul>
 
@@ -295,19 +301,20 @@ Returns all public data about requested user.
 Returns all data about this user.
 <h4><a id="rest-get-users-me-response" href="#rest-get-users-me-response">Response payload</a></h4>
 <ul class="jsondesc">
-  <li class="array"><b>200 ok</b></li>
-  <ul>
-    <li class="object">Root object. In addition to the fields below, contains all fields from <a href="#rest-get-users-1-response">GET users/$1 <b class="code">200 ok</b> response payload</a>.
-      <ul>
-        <li class="integer"><b>ep</b> - Amount of this users Plug Points.</li>
-        <li class="array"><b>ignores</b> - Array containing IDs of all users ignored by this user.</li>
-        <li class="string"><b>language</b> - This users <a href="#std-vars-language">language</a>.</li>
-        <li class="array"><b>notifications</b> - This user's notifications. See: <a href="#std-objs-notification">standard notification object</a>.</li>
-        <li class="boolean"><b>pw</b> - Unknown <b>TODO</b>.</li>
-        <li class="integer"><b>xp</b> - Amount of this user's experience points.</li>
-      </ul>
-    </li>
-  </ul>
+  <li class="array"><b>200 ok</b>
+    <ul>
+      <li class="object">Root object. In addition to the fields below, contains all fields from <a href="#rest-get-users-1-response">GET users/$1 <b class="code">200 ok</b> response payload</a>.
+        <ul>
+          <li class="integer"><b>ep</b> - Amount of this users Plug Points.</li>
+          <li class="array"><b>ignores</b> - Array containing IDs of all users ignored by this user.</li>
+          <li class="string"><b>language</b> - This users <a href="#std-vars-language">language</a>.</li>
+          <li class="array"><b>notifications</b> - This user's notifications. See: <a href="#std-objs-notification">standard notification object</a>.</li>
+          <li class="boolean"><b>pw</b> - Unknown <b>TODO</b>.</li>
+          <li class="integer"><b>xp</b> - Amount of this user's experience points.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -337,10 +344,11 @@ Returns all data about this user.
 <h3><a id="rest-put-users-status" href="#rest-put-users-status">PUT users/status</a></h3>
 <h4><a id="rest-put-users-status-request" href="#rest-put-users-status-request">Request payload</a></h4>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="integer"><b>status</b> - New <a href="#std-vars-status">status</a> for this user.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="integer"><b>status</b> - New <a href="#std-vars-status">status</a> for this user.</li>
+    </ul>
+  </li>
 </ul>
 
 <h4><a id="rest-put-users-status-response" href="#rest-put-users-status-response">Response payload</a></h4>
@@ -354,20 +362,22 @@ Returns all data about this user.
 Used to change this user's language.
 <h4><a id="rest-put-users-language-request">Request payload</a></h4>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="string"><b>language</b> - User's new <a href="#std-vars-language">language</a>.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>language</b> - User's new <a href="#std-vars-language">language</a>.</li>
+    </ul>
+  </li>
 </ul>
 
 <h4><a id="rest-put-users-language-response">Response payload</a></h4>
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b></li>
   <li class="array"><b>requestError 400</b> - Invalid <b class="code">language</b> value.</li>
-  <li class="array"><b>requestError 400</b> - Missing <b class="code">language</b> field.</li>
-  <ul>
-    <li class="string"><i class="string">language is required</i></li>
-  </ul>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">language</b> field.
+    <ul>
+      <li class="string"><i class="string">language is required</i></li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -499,11 +509,12 @@ $1 - id of user to remove
 {"isLocked":true,"removeAllDJs":false}<br />
 <h4><a id="rest-put-booth-lock-request">Request payload</a></h4>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="boolean"><b>isLocked</b> - <i class="boolean">true</i> if booth should become locked, <i class="boolean">false</i> otherwise.</li>
-    <li class="boolean"><b>removeAllDJs</b> - <i class="boolean">true</i> if the waitlist should be cleared/just rank? (doesnt remove current dj), <i class="boolean">false</i> otherwise.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="boolean"><b>isLocked</b> - <i class="boolean">true</i> if booth should become locked, <i class="boolean">false</i> otherwise.</li>
+      <li class="boolean"><b>removeAllDJs</b> - <i class="boolean">true</i> if the waitlist should be cleared/just rank? (doesnt remove current dj), <i class="boolean">false</i> otherwise.</li>
+    </ul>
+  </li>
 </ul>
 <b>TODO</b>
 
@@ -550,7 +561,7 @@ doesnt validate reason
 
 <h3><a id="rest-post-bans-add" href="#rest-post-bans-add">POST bans/add</a></h3>
 <b>request</b>: {"userID":5334480,"reason":5,"duration":"h (hour), d (day), f (forever)"}<br />
-</b>response on banning yourself (400)</b>: {
+<b>response on banning yourself (400)</b>: {
   "data": [
     "Trying to ban yourself?"
   ], 
@@ -674,8 +685,8 @@ request: {"ids":[243892442],"beforeID":0}<br />
 <h3><a id="rest-post-friends" href="#rest-post-friends">POST friends</a></h3>
 <h4><a href="#rest-post-friends-response">Response payload</a></h4>
 <ul class="jsondesc">
-<li class="array"><b>ok 200</b></li>
-<li class="array"><b>cannotFriendSelf 403</b></li>
+  <li class="array"><b>ok 200</b></li>
+  <li class="array"><b>cannotFriendSelf 403</b></li>
 </ul>
 <b>TODO</b>
 
@@ -759,17 +770,18 @@ when user id invald: {
 <b>TODO</b>
 
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="string">stuff</li>
-    <li class="integer">other stuff
-      <ul>
-        <li class="array">Things las oklnhaklsd hgkgjh oka dsokllhgalo hlg ahll lhljljljkljkljkljkkm lkm l m,.. ,mm, .m ,.,m.adf kjlhjhglkaoikghijghihgjkadj glkadl lnkalnd lknda lknldg anlk.a;kgj adgj ;lkdja l;kgjhsd jghl;khsdglk hl</li>
-        <li class="float">stuff again. a lot of stuff so it overflow to the other line aofhkaghnlk salkg jlkagj lkajjlk;djagl;kjdlgkjamldsgmlkad glkjnlkvanoiklfhnjlkanlkvndalvknhokdagnlkdn nldng nn danlk nlknlk nlknlv dav adv a vd</li>
-      </ul>
-    </li>
-    <li class="integer">moar stuff</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="string">stuff</li>
+      <li class="integer">other stuff
+        <ul>
+          <li class="array">Things las oklnhaklsd hgkgjh oka dsokllhgalo hlg ahll lhljljljkljkljkljkkm lkm l m,.. ,mm, .m ,.,m.adf kjlhjhglkaoikghijghihgjkadj glkadl lnkalnd lknda lknldg anlk.a;kgj adgj ;lkdja l;kgjhsd jghl;khsdglk hl</li>
+          <li class="float">stuff again. a lot of stuff so it overflow to the other line aofhkaghnlk salkg jlkagj lkajjlk;djagl;kjdlgkjamldsgmlkad glkjnlkvanoiklfhnjlkanlkvndalvknhokdagnlkdn nldng nn danlk nlknlk nlknlv dav adv a vd</li>
+        </ul>
+      </li>
+      <li class="integer">moar stuff</li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -782,35 +794,38 @@ when user id invald: {
 <h3><a id="sock-in-chat" href="#sock-in-chat">chat</a></h3>
 Sent whenever a new chat message is sent by any user, including this user.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>message</b> - Message's text.</li>
-    <li class="string"><b>un</b> - Sender's username.</li>
-    <li class="string"><b>type</b> - Message's type. <i class="string">message</i></li>
-    <li class="string"><b>uid</b> - Sender's ID.</li>
-    <li class="string"><b>cid</b> - Message's ID.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>message</b> - Message's text.</li>
+      <li class="string"><b>un</b> - Sender's username.</li>
+      <li class="string"><b>type</b> - Message's type. <i class="string">message</i></li>
+      <li class="string"><b>uid</b> - Sender's ID.</li>
+      <li class="string"><b>cid</b> - Message's ID.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-chatdelete" href="#sock-in-chatdelete">chatDelete</a></h3>
 Sent when a chat message gets deleted.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>c</b> - Deleted message's ID.</li>
-    <li class="integer"><b>u</b> - Removing user's ID.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>c</b> - Deleted message's ID.</li>
+      <li class="integer"><b>u</b> - Removing user's ID.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-earn" href="#sock-in-earn">earn</a></h3>
 Sent every 5 minutes to update this users experience points and Plug Points. This message is also used by Plug.dj to show level up dialogs.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>xp</b> - This user's current experience points.</li>
-    <li class="integer"><b>ep</b> - This user's current Plug Points.</li>
-    <li class="integer"><b>level</b> - This user's current level.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>xp</b> - This user's current experience points.</li>
+      <li class="integer"><b>ep</b> - This user's current Plug Points.</li>
+      <li class="integer"><b>level</b> - This user's current level.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-grab" href="#sock-in-grab">grab</a></h3>
@@ -822,42 +837,45 @@ Sent when some user grabs currently played song.
 <h3><a id="sock-in-vote" href="#sock-in-vote">vote</a></h3>
 Sent when some user woots or mehs currently played song.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>i</b> - Voting user's ID.</li>
-    <li class="integer"><b>v</b> - Voting user's vote. <i class="integer">1</i> if woot, <i class="integer">-1</i> if meh.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>i</b> - Voting user's ID.</li>
+      <li class="integer"><b>v</b> - Voting user's vote. <i class="integer">1</i> if woot, <i class="integer">-1</i> if meh.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-advance" href="#sock-in-advance">advance</a></h3>
 Sent when a new media is played. The object is empty if there's no DJ.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>c</b> - Current DJ's user ID.</li>
-    <li class="array"><b>d</b> - Array of user IDs of users in wait list.</li>
-    <li class="string"><b>h</b> - Unknown.</li>
-    <li class="object"><b>m</b> - Current <a href="#std-objs-media">media</a>.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>c</b> - Current DJ's user ID.</li>
+      <li class="array"><b>d</b> - Array of user IDs of users in wait list.</li>
+      <li class="string"><b>h</b> - Unknown.</li>
+      <li class="object"><b>m</b> - Current <a href="#std-objs-media">media</a>.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-userjoin" href="#sock-in-userjoin">userJoin</a></h3>
 Sent when a user joins or refreshes. If this message was sent and that user is still in the room it means he/she refreshed. <b>TODO: rephrase that?</b>
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>avatarID</b> - Joining users avatar.</li>
-    <li class="integer"><b>badge</b> - Joining users <a href="#std-vars-badge">badge</a>.</li>
-    <li class="string"><b>blurb</b> - Joining users blurb (description in users profile).</li>
-    <li class="integer"><b>gRole</b> - Joining users <a href="#std-vars-global-role">global role</a>.</li>
-    <li class="integer"><b>id</b> - Joining users ID.</li>
-    <li class="string"><b>joined</b> - Joining users registration <a href="#std-vars-date">date</a>.</li>
-    <li class="integer"><b>level</b> - Joining users experience level.</li>
-    <li class="integer"><b>role</b> - Joining users <a href="#std-vars-role">role</a>.</li>
-    <li class="string"><b>slug</b> - Joining users slug.</li>
-    <li class="integer"><b>status</b> - Joining users <a href="#std-vars-status">status</a>.</li>
-    <li class="string"><b>username</b> - Joining users username.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>avatarID</b> - Joining users avatar.</li>
+      <li class="integer"><b>badge</b> - Joining users <a href="#std-vars-badge">badge</a>.</li>
+      <li class="string"><b>blurb</b> - Joining users blurb (description in users profile).</li>
+      <li class="integer"><b>gRole</b> - Joining users <a href="#std-vars-global-role">global role</a>.</li>
+      <li class="integer"><b>id</b> - Joining users ID.</li>
+      <li class="string"><b>joined</b> - Joining users registration <a href="#std-vars-date">date</a>.</li>
+      <li class="integer"><b>level</b> - Joining users experience level.</li>
+      <li class="integer"><b>role</b> - Joining users <a href="#std-vars-role">role</a>.</li>
+      <li class="string"><b>slug</b> - Joining users slug.</li>
+      <li class="integer"><b>status</b> - Joining users <a href="#std-vars-status">status</a>.</li>
+      <li class="string"><b>username</b> - Joining users username.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-userleave" href="#sock-in-userleave">userLeave</a></h3>
@@ -875,46 +893,40 @@ Sent when the wait list gets updated.
 <h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
 Sent when some users data changes. Plug.dj's code doesn't remove any fields from this message except for <b class="code">id</b> and just appends them to that users object, which means that in theory it can update any data of that user. The only fields that appear in this message at once are <b class="code">id</b> and one other field from below.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
-    <li class="integer"><b>level</b> - That users new experience level.</li>
-    <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
-    <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
-  </ul>
-</ul>
-
-<h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
-Sent when some users data changes. Any field except for <b class="code">id</b> is going to get appended to that users object.
-<ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
+      <li class="integer"><b>level</b> - That users new experience level.</li>
+      <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
+      <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-ban" href="#sock-in-ban">ban</a></h3>
 Sent when this user gets banned from the community.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>r</b> - Ban reason ID. Range: <i class="integer">1</i>-<i class="integer">5</i> This value may be out of range.</li>
-    <li class="string"><b>t</b> - Unknown. <i class="string">ban</i> <b>TODO: investigate on this one</b></li>
-    <li class="string"><b>d</b> - Ban duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>r</b> - Ban reason ID. Range: <i class="integer">1</i>-<i class="integer">5</i> This value may be out of range.</li>
+      <li class="string"><b>t</b> - Unknown. <i class="string">ban</i> <b>TODO: investigate on this one</b></li>
+      <li class="string"><b>d</b> - Ban duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-modmute" href="#sock-in-modmute">modMute</a></h3>
 Sent when some user gets muted.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>id</b> - Muted users ID.</li>
-    <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
-    <li class="string"><b>m</b> - Muting user's username.</li>
-    <li class="string"><b>t</b> - Muted user's username.</li>
-    <li class="string"><b>d</b> - Duration. <i string="string">l</i> if long (45 minutes), <i string="string">m</i> if medium (30 minutes), <i string="string">s</i> if short (15 minutes) or <i string="string">o</i> if unmute.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>id</b> - Muted users ID.</li>
+      <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
+      <li class="string"><b>m</b> - Muting user's username.</li>
+      <li class="string"><b>t</b> - Muted user's username.</li>
+      <li class="string"><b>d</b> - Duration. <i string="string">l</i> if long (45 minutes), <i string="string">m</i> if medium (30 minutes), <i string="string">s</i> if short (15 minutes) or <i string="string">o</i> if unmute.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-skip" href="#sock-in-skip">skip</a></h3>
@@ -932,71 +944,77 @@ Sent when current DJ gets skipped by a staff member.
 <h3><a id="sock-in-modban" href="#sock-in-modban">modBan</a></h3>
 Sent when a user gets banned.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>u</b> - Banned user's ID.</li>
-    <li class="string"><b>m</b> - Banning user's username.</li>
-    <li class="string"><b>t</b> - Banned user's username.</li>
-    <li class="string"><b>d</b> - Duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>u</b> - Banned user's ID.</li>
+      <li class="string"><b>m</b> - Banning user's username.</li>
+      <li class="string"><b>t</b> - Banned user's username.</li>
+      <li class="string"><b>d</b> - Duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-modstaff" href="#sock-in-modstaff">modStaff</a></h3>
 Sent when user's role changes.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="object"><b>u</b> - Promoted user's data.
-      <ul>
-        <li class="integer"><b>i</b> - Promoted user's ID.</li>
-        <li class="integer"><b>p</b> - Promoted user's new <a href="#std-vars-role">role</a>.</li>
-        <li class="string"><b>n</b> - Promoted user's username.</li>
-      </ul>
-    </li>
-    <li class="string"><b>m</b> - Promoting user's username.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="object"><b>u</b> - Promoted user's data.
+        <ul>
+          <li class="integer"><b>i</b> - Promoted user's ID.</li>
+          <li class="integer"><b>p</b> - Promoted user's new <a href="#std-vars-role">role</a>.</li>
+          <li class="string"><b>n</b> - Promoted user's username.</li>
+        </ul>
+      </li>
+      <li class="string"><b>m</b> - Promoting user's username.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-modadddj" href="#sock-in-modadddj">modAddDJ</a></h3>
 Sent when a user gets added to wait list.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>m</b> - Adding user's username.</li>
-    <li class="string"><b>t</b> - Added user's username.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>m</b> - Adding user's username.</li>
+      <li class="string"><b>t</b> - Added user's username.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-modremovedj" href="#sock-in-modremovedj">modRemoveDJ</a></h3>
 Sent when a user gets removed from wait list.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>m</b> - Removing user's username.</li>
-    <li class="string"><b>t</b> - Removed user's username.</li>
-    <li class="boolean"><b>d</b> - Unknown.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>m</b> - Removing user's username.</li>
+      <li class="string"><b>t</b> - Removed user's username.</li>
+      <li class="boolean"><b>d</b> - Unknown.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-djlistcycle" href="#sock-in-djlistcycle">djListCycle</a></h3>
 Sent when wait list cycle gets enabled or disabled.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="integer"><b>u</b> - Toggling user's ID.</li>
-    <li class="string"><b>t</b> - Toggling user's username.</li>
-    <li class="boolean"><b>f</b> - Wait list cycle state. <i class="boolean">true</i> if enabled, <i class="boolean">false</i> otherwise.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>u</b> - Toggling user's ID.</li>
+      <li class="string"><b>t</b> - Toggling user's username.</li>
+      <li class="boolean"><b>f</b> - Wait list cycle state. <i class="boolean">true</i> if enabled, <i class="boolean">false</i> otherwise.</li>
+    </ul>
+  </li>
 </ul>
 
 <h3><a id="sock-in-roomnameupdate" href="#sock-in-roomnameupdate">roomNameUpdate</a></h3>
 Sent when room's name changes.
 <ul class="jsondesc">
-  <li class="object"><b>p</b></li>
-  <ul>
-    <li class="string"><b>u</b> - Changing user's username.</li>
-    <li class="string"><b>n</b> - Room's new name.</li>
-  </ul>
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>u</b> - Changing user's username.</li>
+      <li class="string"><b>n</b> - Room's new name.</li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -1010,59 +1028,59 @@ Sent when room's name changes.
 <h3><a id="std-vars-status" href="std-vars-status">Status</a></h3>
 Integer representing users status.
 <ul class="jsondesc">
-<li class="integer"><b>0</b> - Available</li>
-<li class="integer"><b>1</b> - Away</li>
-<li class="integer"><b>2</b> - Working</li>
-<li class="integer"><b>3</b> - Gaming</li>
+  <li class="integer"><b>0</b> - Available</li>
+  <li class="integer"><b>1</b> - Away</li>
+  <li class="integer"><b>2</b> - Working</li>
+  <li class="integer"><b>3</b> - Gaming</li>
 </ul>
 
 
 <h3><a id="std-vars-role" href="std-vars-role">Role</a></h3>
 Integer representing users role in a room.
 <ul class="jsondesc">
-<li class="integer"><b>0</b> - User</li>
-<li class="integer"><b>1</b> - Resident DJ</li>
-<li class="integer"><b>2</b> - Bouncer</li>
-<li class="integer"><b>3</b> - Manager</li>
-<li class="integer"><b>4</b> - Co-Host</li>
-<li class="integer"><b>5</b> - Host</li>
+  <li class="integer"><b>0</b> - User</li>
+  <li class="integer"><b>1</b> - Resident DJ</li>
+  <li class="integer"><b>2</b> - Bouncer</li>
+  <li class="integer"><b>3</b> - Manager</li>
+  <li class="integer"><b>4</b> - Co-Host</li>
+  <li class="integer"><b>5</b> - Host</li>
 </ul>
 
 
 <h3><a id="std-vars-global-role" href="std-vars-global-role">Global Role</a></h3>
 Integer representing users role on entire Plug.dj.
 <ul class="jsondesc">
-<li class="integer"><b>0</b> - None</li>
-<li class="integer"><b>1</b> - Leader</li>
-<li class="integer"><b>2</b> - Volounteer</li>
-<li class="integer"><b>3</b> - Brand Ambassador</li>
-<li class="integer"><b>4</b> - Admin</li>
+  <li class="integer"><b>0</b> - None</li>
+  <li class="integer"><b>1</b> - Leader</li>
+  <li class="integer"><b>2</b> - Volounteer</li>
+  <li class="integer"><b>3</b> - Brand Ambassador</li>
+  <li class="integer"><b>4</b> - Admin</li>
 </ul>
 
 
 <h3><a id="std-vars-badge" href="std-vars-badge">Badge</a></h3>
 Integer representing users badge obtained by being a registered user before July 2014 and migrating your account or being a beta tester.
 <ul class="jsondesc">
-<li class="integer"><b>0</b> - None</li>
-<li class="integer"><b>1</b> - Beta Tester</li>
-<li class="integer"><b>2</b> - Early Adopter</li>
-<li class="integer"><b>3</b> - Original Gangster</li>
-<li class="integer"><b>4</b> - Plug Superstar</li>
+  <li class="integer"><b>0</b> - None</li>
+  <li class="integer"><b>1</b> - Beta Tester</li>
+  <li class="integer"><b>2</b> - Early Adopter</li>
+  <li class="integer"><b>3</b> - Original Gangster</li>
+  <li class="integer"><b>4</b> - Plug Superstar</li>
 </ul>
 
 
 <h3><a id="std-vars-language" href="std-vars-language">Language</a></h3>
 <ul class="jsondesc">
-<li class="string"><b>bg</b> - Bulgarian</li>
-<li class="string"><b>cs</b> - Czech</li>
-<li class="string"><b>en</b> - English</li>
-<li class="string"><b>fi</b> - Finnish</li>
-<li class="string"><b>fr</b> - French</li>
-<li class="string"><b>ms</b> - Malay</li>
-<li class="string"><b>nl</b> - Dutch</li>
-<li class="string"><b>pt</b> - Portuguese</li>
-<li class="string"><b>sk</b> - Slovak</li>
-<li class="string"><b>zh</b> - Chinese</li>
+  <li class="string"><b>bg</b> - Bulgarian</li>
+  <li class="string"><b>cs</b> - Czech</li>
+  <li class="string"><b>en</b> - English</li>
+  <li class="string"><b>fi</b> - Finnish</li>
+  <li class="string"><b>fr</b> - French</li>
+  <li class="string"><b>ms</b> - Malay</li>
+  <li class="string"><b>nl</b> - Dutch</li>
+  <li class="string"><b>pt</b> - Portuguese</li>
+  <li class="string"><b>sk</b> - Slovak</li>
+  <li class="string"><b>zh</b> - Chinese</li>
 </ul>
 
 
@@ -1070,13 +1088,13 @@ Integer representing users badge obtained by being a registered user before July
 Every date in Plug.dj's code uses the following format:<br />
 yyyy-mm-dd hh:mm:ss.iiiiii
 <ul class="jsondesc">
-<li><b>yyyy</b> - Year. Example: <i class="integer">2014</i></li>
-<li><b>mm</b> - Month. Range: <i class="integer">01</i>-<i class="integer">12</i>. Example: <i class="integer">12</i></li>
-<li><b>dd</b> - Day. Range: <i class="integer">01</i>-<i class="integer">31</i>. Example: <i class="integer">14</i></li>
-<li><b>hh</b> - Hours. Range: <i class="integer">00</i>-<i class="integer">23</i>. Example: <i class="integer">08</i></li>
-<li><b>mm</b> - Minutes. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">03</i></li>
-<li><b>mm</b> - Seconds. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">00</i></li>
-<li><b>iiiiii</b> - Microseconds. Range: <i class="integer">000000</i>-<i class="integer">999999</i>. Example: <i class="integer">320600</i></li>
+  <li><b>yyyy</b> - Year. Example: <i class="integer">2014</i></li>
+  <li><b>mm</b> - Month. Range: <i class="integer">01</i>-<i class="integer">12</i>. Example: <i class="integer">12</i></li>
+  <li><b>dd</b> - Day. Range: <i class="integer">01</i>-<i class="integer">31</i>. Example: <i class="integer">14</i></li>
+  <li><b>hh</b> - Hours. Range: <i class="integer">00</i>-<i class="integer">23</i>. Example: <i class="integer">08</i></li>
+  <li><b>mm</b> - Minutes. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">03</i></li>
+  <li><b>mm</b> - Seconds. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">00</i></li>
+  <li><b>iiiiii</b> - Microseconds. Range: <i class="integer">000000</i>-<i class="integer">999999</i>. Example: <i class="integer">320600</i></li>
 </ul>
 
 
@@ -1084,13 +1102,14 @@ yyyy-mm-dd hh:mm:ss.iiiiii
 <h2><a id="std-objects" href="#std-objects">Objects</a></h2>
 <h3><a id="std-objs-notification" href="std-objs-notification">Notification</a></h3>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="string"><b>action</b> - Notification's type. <i class="string">levelUp</i></li>
-    <li class="integer"><b>id</b> - Notification's ID.</li>
-    <li class="string"><b>timestamp</b> - Notification's creation <a href="#std-vars-date">time</a>.</li>
-    <li class="string"><b>value</b> - Notification's value dependant on notification's type.</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>action</b> - Notification's type. <i class="string">levelUp</i></li>
+      <li class="integer"><b>id</b> - Notification's ID.</li>
+      <li class="string"><b>timestamp</b> - Notification's creation <a href="#std-vars-date">time</a>.</li>
+      <li class="string"><b>value</b> - Notification's value dependant on notification's type.</li>
+    </ul>
+  </li>
 </ul>
 Notification values for different notification types:
 <ul class="jsondesc">
@@ -1100,16 +1119,17 @@ Notification values for different notification types:
 
 <h3><a id="std-objs-media" href="std-objs-media">Media</a></h3>
 <ul class="jsondesc">
-  <li class="object">Root object.</li>
-  <ul>
-    <li class="string"><b>author</b> - Media's author.</li>
-    <li class="integer"><b>format</b> - Media's format. <i class="integer">1</i> if YouTube, <i class="integer">2</i> if SoundCloud.</li>
-    <li class="string"><b>image</b> - Media's thumbnail URL.</li>
-    <li class="string"><b>cid</b> - Media's ID (YouTube video or SoundCloud song ID).</li>
-    <li class="integer"><b>duration</b> - Media's duration in seconds.</li>
-    <li class="string"><b>title</b> - Media's title.</li>
-    <li class="integer"><b>id</b> - Plug.dj's media ID (used for playlists).</li>
-  </ul>
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>author</b> - Media's author.</li>
+      <li class="integer"><b>format</b> - Media's format. <i class="integer">1</i> if YouTube, <i class="integer">2</i> if SoundCloud.</li>
+      <li class="string"><b>image</b> - Media's thumbnail URL.</li>
+      <li class="string"><b>cid</b> - Media's ID (YouTube video or SoundCloud song ID).</li>
+      <li class="integer"><b>duration</b> - Media's duration in seconds.</li>
+      <li class="string"><b>title</b> - Media's title.</li>
+      <li class="integer"><b>id</b> - Plug.dj's media ID (used for playlists).</li>
+    </ul>
+  </li>
 </ul>
 
 </body>
@@ -1144,21 +1164,3 @@ userJoin				v	{"username":"DrOktopus","status":0,"gRole":0,"level":1,"avatarID":
 modAddDJ				v	{"m":"user adding","t":"user added"}
 modMoveDJ					{"u":"moved users username","m":"user who moved","o":old position,"n":new position}
 -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
