@@ -1,0 +1,1164 @@
+<!doctype HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Unofficial Plug.dj protocol documentation</title>
+<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,400italic' rel='stylesheet' type='text/css'>
+<style>
+html {
+    background-color: #ededff;
+    font-family: Roboto, Helvetica, sans-serif, Arial;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+body {
+    margin: 0px auto;
+    width: 1200px;
+    padding-bottom: 500px;
+}
+
+h1, h2 {
+    font-weight: 400;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+    font-weight: 400;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+}
+
+h4 {
+    font-weight: 400;
+    margin: 20px 0px 10px;
+}
+
+h1 > a, h2 > a, h3 > a, h4 > a {
+    color: rgba(0, 0, 0, 0.8);
+    text-decoration: none;
+}
+
+.jsondesc {
+    margin: 10px 0px 20px;
+    padding-left: 10px;
+}
+
+.jsondesc, .jsondesc ul {
+    list-style: none;
+}
+
+.jsondesc > ul > li ul {
+    padding-left: 0px;
+    margin-left: 2px;
+}
+
+.jsondesc li {
+    background-position: 0px 4px;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+}
+
+.jsondesc li.object {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaABkRYETxTwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAACK0lEQVQ4y42Sz0uUQRjHP8+8+5ZZSx0rCSJQKi0q9SJEsHaVLkKHIOgmHTp6E4WF7A8IdGmhDCyQ7BBUINGpn0SytIQ/6hJKhdLu1r6vqzvzznTQ3VbeiOb0MPOdz8znmRHnHAD9w8N9yrkD/Gto/XxqdPRz41SiVjhrD94ZGRmvRhE6itDWEjlH7YBcLsfEzMxA/9CQPEinP9X2qTrAGLHWEmlNpDXV9XUqYUgQBJTLZYIgYDqdHrfG9PYNDrbGAJFzIoASwfc8mnyfHYkECaUQEQqFAjcnJ0l1dIzN5fMXYwpGa6VEUCIA+J73R9QYUqkUzjmSySRPZ2eLMUAURSINgExuhcyHFXBw+fg+Lh3di7G2no0rRFFdQYlwN79KV1c3Xd3dTM2Vtuk0AuIKSoG1mGKRhfn5zbVSiSbfB8ATwWit4jcwRgmwks3ysacHFa6R8H0Svo8K1+qN9T2PyJg4QG/1YDmb5WRzC9e+52l7PI335T5HWp5w/cVZ3ixP4CuF/puCq1aVABsiuNb9XImWOP/jG7fPFDl1+hjQyct39+htHcBVqyoG0MYoEaECrL7Oo0u/KCYThOUmFhcWASgVNpCtbFzBWhFgT2cnb3dr3rfsYrXtEJXQojyF8hSVYPOVtLVxhfUwTACcy2RwzmGdwwEPxy7w6tlXnIMThzuRhuw2wM9CYWetrn0o5xy3rj7CbcGsc4hS27J1QBAES83t7Tf4jyEiS7X6N7IhD8PTqdH+AAAAAElFTkSuQmCC');
+}
+
+.jsondesc li.string {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaAQIl6QSkVwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAB4ElEQVQ4y42Sv2obQRCHv1nrIhMQOlUifwhBUiBgq/IbKGndGfIKeQJ3xgYVzgME4jIp3ISkDrhIlVoYXKRIiAyufSH4dBK3ezMpfCdkToQsLDsss9/85jcrZgbA3uHhrjN7wL+W918/Hh//XL1qVIGpPnx/dHSSFwW+KPCqFGZUBc7Pz/lwdvZ67+BAPo3HP6p3bgkIQVSVwnsK78kXC+azGWmacnNzQ5qmfB6PTzSEF7v7+89qgMJMBHAiRBsbbEYR9xoNGs4hIiRJwtvTU0bb2+++X1y8qrUQvHdOhG+TCWZGHMdkWcbzwQBCYDQaYWa0Wi2+TCa/a4CiKEREGAwGqCpmRqfTYTOKygqBoLrMXQ8AptMpcRxzfX2NmfGrNLLdbjOfzxkOh+sBVQv9fn9ZvVJSbVVlQ4TgvasrCMEJcHl5uXxYKYnjGDMjyzIedbsUIdQBvvSgUrDqw2ocOYdf14LluVv1IEkSVPVO9WazydNuF8vzNQpCcCJCr9cDoNPpYGY8brdRVdQMNUPK3DpAdTmFSm6WZTyJY3AOyhE6EbxqvYXFbNYAeLmzc+uBGQao2e13LSGyknsH8CdJmlUsIjgRzAwpTweoc4hzd3KXgDRNr+5vbb3hP5aIXFXxX/oVN9MJBzEkAAAAAElFTkSuQmCC');
+}
+
+.jsondesc li.integer {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaAQAHDlKHMQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAByklEQVQ4y42Sv2pUURCHv5m76z9cey20skpqGxFkRSRFQCQg6Av4BOlCAlvEBxBMqUgQRQVBVFKkyAMsCxEEFVIsdrKie5eEe86ZsfDe6653Eac5w2HOd+Y3vxF3B2BlfX1Z3c/yrwhh9/nm5pfpq1aVuNm5RxsbW0VKhJQIZiR3qg8GgwGPd3buraytyYte73P1TmtAjGJmpBBIIVAcHXE4mZDnOePxmDzPednrbVmM15ZXVy82AMldBFAR2lnGiXabY60WLVVEhNFoxIPtbbqLiw8/7u/fbkiIIaiKoCIAtLPsj9AY6Xa7uDudTod3/f73BiClJDIFmAeJZnXtfEApYTr+hojIfEAtQRXM2Hs/Zu/tTwAu3zjNpesnAchEiCFos4MYte5AlatLZ0gxcfDpkCtLHay0M8syUoxNQChnICK/rVElpUgowsxgM1XCPAleFHUHVvqbUqIIxcxcMhG8KLSxByFGFREqyOunQ149OeBD/xtvnn2lsljK2qYEs9oFc+fW3QvcvHMed8fcsdJCFSGYNSUcTSYtoJ6Buc/IoXRHpmpnAD9Go+NVXi2UuyPlqYCpIqoztTUgz/PhqYWF+/xHiMiwyn8BGQ/sdWM9mu0AAAAASUVORK5CYII=');
+}
+
+.jsondesc li.float {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaAQEDECRyaQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABv0lEQVQ4y42SsWpUURCGv5m7m4TgksIUrp1gBEkKn8BirUOagK+QysIiXcjCgvEBBFNqkUa0FCGFjxAWUgQxYBFsV2Tv4u4958zY3Hvd9S7iNGc4zHzn/+eMuDsA+8fHu+re5V8Rwud3JyfX81etKnGzu2/6/dMiJUJKBDOSO9UDw+GQt+fnB/tHR/J+MPha9WkNiFHMjBQCKQSK6ZRfkwl5njMej8nznA+DwanF+GT38HCrAUjuIoCK0M4y1tptVlotWqqICKPRiFdnZ/R2dl5fXV4+bViIIaiKoCIAtLPsj9EY6fV6uDudTodPFxc/GoCUksgcYBkkmtW1ywGlhfn4GyIiywG1BVUw48uz73Xf2v0VNg82AMhEiCFoU0GMWitQpSgK7j3vsr61irlj5XdmWUaKsQkI5QxEBAWm0ylXL74B0N3b5M7ebdpZRqZKWGbBi6JWYCXgUf8BGw9vLSoQwYtiiYIYVUQQd1SE2WwGTj2TKqSsbQLM6l8wd3Y/PsaqVZ6DqAjBrGlhOpm0gHoGViqxal1LiMzVLgB+jkartcxyodwdKU8FTBVRXaitAXme36xvb7/kP0JEbqr8Nwnu6wapuwMkAAAAAElFTkSuQmCC');
+}
+
+.jsondesc li.boolean {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaAQIzHdARBgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAB5ElEQVQ4y42SsWsUURDGfzN7l0ThUBEDaiWiCIn+BVYnwSpWAUvBShDsTBcSvSJWFkEwpSnSiFYiSgp7C8NBChG1kIBN8IK5Pdzseztj4e3m4h3iVMPje7833/dG3B2AucXFWXU/zb8qhHfPl5e/DB7VysbNzjxbWlrNi4JQFAQzCnfKB9rtNmsbG3fmFhbkRav1ubynFSBGMTOKEChCIM8yfvV6pGlKt9slTVNetlqrFuO12fn5C0OAwl0EUBHqScJEvc5YrUZNFRGh0+nwZH2d5vT0049bWzeHLMQQVEVQEQDqSXJgNEaazSbuTqPR4M3m5u4QoCgKkQHAKEg0q7SjAX0Lg/U3RERGAyoLquSfvtNZeVvdG79+mYmZaQASEWIIOhxijDo4QZ7nTK7conF3hu6rD1Ww9SShiFGHJgj9DEQEdyfLMr7dXyPs7HHk0lmKH13qJxskqoQBCwd7kOcHE7iRZRnnH9/m4to9dttfiTt7qAiJCJ7nIyaIUUUEccfM2d/f5/2NB38ymDzO2KljqAjS1w4DzKpfOHHlHFdfP8T6q2zumBnmjooQzIZ/Iev1agAigkIlttKnKpghA9pDgJ+dznjZlwvl7lWoCpgqonpIWwHSNN0+OjX1iP8oEdku+9/iN/l11k+mEQAAAABJRU5ErkJggg==');
+}
+
+.jsondesc li.array {
+    /* Image borrowed from Minecraft Wiki http://minecraft.gamepedia.net/ */
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3goaAQIXIdP11wAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAACFElEQVQ4y42TwUvUQRTHP29+u/0iWDyXh05d1MDF6JbQRqfwJvQHBBGdOhkkpiBpQreCDILq4CXqGIFBQVCHCFm1XLAuuh3Ew0b4W1t2Zt7rsrutrEQPHvMYvvP9ft+bGTEzAManp8ec2XH+Fd6/fT4//717K9cuTPXE05mZxWaM+BjxqkQz2gLlcplny8vXxqem5MXs7Lf2OdchCEFUleg90XuajQa/63WyLGNvb48sy3g5O7uoIVwYm5g41UMQzUQAJ0I+STiaz3MklyPnHCJCrVbjwdISpaGhh5X19cs9LQTvnRPh4qvTvLm0zqfVVfr6+jjZ3w8hUCqVMDMKhQKvV1Z+9hDEGEVEeDf2FTXj3MgIaoaPsaUQCKod7OEEQPnWTYbnFvhcqZCmKfv7+6RpiqqSpimFQuFwgnYLZxbuoaqcHRhAzTrpY6ThPYkIwXvXO8QQnAA3nuRxzvFxbY3K9jaVrS1+7Ox0BptPEmIIrseBb83g/pWImTBaLKKqB1zkk4TEOXxXC3/fQbPpBLg9OYmI8GFtjY1qlZXNzY4TJ0IigjWbhzgIwYkId+bmMGB0eBhrq3c5kRa2x4FXFQGuP3YI8L5c5sv2NhvVKtXdXZxIJ71q7y006vUcwKOrYCacLxYxQFv/Qc1AFenCHiD4Vaul7VpaSmaGtFYHqHOIcwewHYIsy6rHBgfv8h8hItV2/Qe1PzbsQ1FA1gAAAABJRU5ErkJggg==');
+}
+
+.jsondesc > li + ul {
+    margin-bottom: 6px;
+}
+
+.jsondesc ul {
+    position: relative;
+    margin-left: 8px;
+    padding-left: 14px;
+}
+
+/*.jsondesc ul:before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 12px;
+    width: 1px;
+    border-left: 1px solid #000000;
+}*/
+
+.jsondesc > ul li {
+    position: relative;
+}
+
+.jsondesc > ul li:before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: -14px;
+    width: 10px;
+    height: 1px;
+    border-bottom: 1px solid #000000;
+}
+
+.jsondesc > ul li:after {
+    content: '';
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: -14px;
+    border-left: 1px solid #000000;
+}
+
+.jsondesc > ul li:last-child:after {
+    height: 13px;
+    bottom: initial;
+}
+
+.jsondesc li > b:nth-of-type(1), b.code {
+    color: #000000;
+    font-family: "Lucida Console", Monaco, monospace;
+    background-color: rgba(0, 0, 50, 0.1);
+}
+
+i {
+    font-family: "Courier New", Courier, monospace;
+    font-style: normal;
+    background-color: rgba(0, 0, 100, 0.06);
+}
+</style>
+</head>
+<body>
+<h1><a id="intro" href="#intro">Introduction</a></h1>
+This document has been made to help other developers struggling with Plug's silly procotol. Maybe I'll write a bit more here later.
+
+<h1><a id="rest" href="#rest">REST API</a></h1>
+All requests to REST API require <i>Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each requests URL starts with <i>https://plug.dj/_/</i>. If the request contains any content it must have <i>Content-Type</i> header set to <i>application/json</i>.<br />
+If no <i>Request payload</i>, <i>Request variable</i> or <i>Response payload</i> section is defined, then such is empty or doesn't exist.
+
+<h2><a id="rest-standard" href="#rest-standard">Standard response elements</a></h2>
+<h4><a id="rest-standard-response-codes" href="#rest-standard-response-codes">Standard response codes</a></h4>
+These are the response statuses alone with their respective HTTP response codes that you can recieve from all endpoints.
+<ul class="jsondesc">
+  <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
+  <li class="string"><b>notAuthorized 403</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
+  <li class="string"><b>TODO</b> - Write more about those if any more of them exists.</li>
+</ul>
+
+<h4><a id="rest-standard-response-payload" href="#rest-standard-response-payload">Standard response payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="array"><b>data</b> - Varies across different endpoints.</li>
+    <li class="object"><b>meta</b> - Unknown. Seems to be always empty.</li>
+    <li class="string"><b>status</b> - Status code. <i class="string">ok</i> if request was successfully completed, other values vary across different endpoints.</li>
+    <li class="float"><b>time</b> - Time it took to complete the request in <b>TODO</b>.</li>
+  </ul>
+</ul>
+
+Below this is the format used to describe different <i>data</i> contents depending on <i>status</i>:
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b> - Status code this payload description corresponds to followed by HTTP response code.</li>
+  <ul>
+    <li class="object">Root object.
+      <ul>
+        <li class="string"><b>fieldName</b> - Description describing it's purpose. Icon represents the type of that field. Example below.</li>
+        <li class="integer"><b>currentDJ</b> - Current DJ's user ID.</li>
+      </ul>
+    </li>
+  </ul>
+  <li class="array"><b>anotherStatusCode 403</b> - Another status code.</li>
+  <ul>
+    <li class="object">Object #1
+      <ul>
+        <li class="boolean"><b>booleanValue</b> - <i class="boolean">true</i> if something, <i class="boolean">false</i> otherwise.</li>
+      </ul>
+    </li>
+    <li class="object">Object #2
+      <ul>
+        <li class="string">...</li>
+      </ul>
+    </li>
+  </ul>
+  <li class="array"><b>yetAnotherOne 400</b> - One more status code, this time with empty <i>data</i> array.</li>
+</ul>
+
+<h4><a id="rest-standard-session" href="#rest-standard-session">Session identificator</a></h4>
+Every response from Plug.dj contains a <i>Set-Cookie</i> header containing <i>session</i> cookie. After aquiring that session ID you should use it for every request you make to the REST API, otherwise it will treat you as unauthenticated.
+
+
+<h2><a id="rest-endpoints" href="#rest-endpoints">Endpoints</a></h2>
+<h3><a id="rest-post-auth-login" href="#rest-post-auth-login">POST auth/login</a></h3>
+Used for authenticating user using Plug.dj account.
+
+<h4><a id="rest-post-auth-login-request" href="#rest-post-auth-login-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="string"><b>csrf</b> - A string retrieved from rooms HTML. More about CSRF on <a href="http://en.wikipedia.org/wiki/Cross-site_request_forgery">Wikipedia</a>.</li>
+    <li class="string"><b>email</b> - User's email.</li>
+    <li class="string"><b>password</b> - User's password.</li>
+  </ul>
+</ul>
+
+<h4><a id="rest-post-auth-login-response" href="#rest-post-auth-login-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b></li>
+  <ul>
+    <li class="object">Users object. See <a href="#rest-get-users-1-response">GET users/$1 <b class="code">ok 200</b> response payload</a>.</li>
+  </ul>
+  <li class="array"><b>csrfTokenExpired 403</b> - CRSF token not specified, invalid or expired.</li>
+  <ul>
+    <li class="string"><i class="string">This CSRF token has expired.</i></li>
+  </ul>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">email</b> or <b class="code">password</b> fields in request payload.</li>
+  <ul>
+    <li class="string"><i class="string">email is required</i> or <i class="string">password is required</i></li>
+  </ul>
+  <li class="array"><b>badLogin 401</b> - Invalid email and password combination.</li>
+</ul>
+
+
+<h3><a id="rest-post-auth-facebook" href="#rest-post-auth-facebook">POST auth/facebook</a></h3>
+Used for authenticating user using Facebook account.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-auth-token" href="#rest-get-auth-token">GET auth/token</a></h3>
+{"data": ["TOKEN"], "meta": {}, "status": "ok", "time": 44.656991958618164}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-auth-session" href="#rest-delete-auth-session">DELETE auth/session</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-auth-reset-me" href="#rest-post-auth-reset-me">POST auth/reset/me</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-users-1" href="#rest-get-users-1">GET users/$1</a></h3>
+Returns all public data about requested user.
+<h4><a id="rest-get-users-1-variables" href="#rest-get-users-1-variables">Request variables</a></h4>
+<ul class="jsondesc">
+<li class="integer"><b>$1</b> - The ID of the desired user.</li>
+</ul>
+
+<h4><a id="rest-get-users-1-response" href="#rest-get-users-1-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b></li>
+  <ul>
+    <li class="string"><b>avatarID</b> - User's avatar ID.</li>
+    <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
+    <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
+    <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
+    <li class="integer"><b>id</b> - User's ID.</li>
+    <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
+    <li class="integer"><b>level</b> - User's experience level.</li>
+    <li class="array"><b>pVibes</b> - Unknown <b>TODO</b>.</li>
+    <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
+    <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
+    <li class="string"><b>username</b> - User's name. May change.</li>
+  </ul>
+  <li class="array"><b>notFound 404</b> - User with requested ID doesn't exist.</li>
+</ul>
+
+
+<h3><a id="rest-get-users-me" href="#rest-get-users-me">GET users/me</a></h3>
+Returns all data about this user.
+<h4><a id="rest-get-users-me-response" href="#rest-get-users-me-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>200 ok</b></li>
+  <ul>
+    <li class="object">Root object. In addition to the fields below, contains all fields from <a href="#rest-get-users-1-response">GET users/$1 <b class="code">200 ok</b> response payload</a>.
+      <ul>
+        <li class="integer"><b>ep</b> - Amount of this users Plug Points.</li>
+        <li class="array"><b>ignores</b> - Array containing IDs of all users ignored by this user.</li>
+        <li class="string"><b>language</b> - This users <a href="#std-vars-language">language</a>.</li>
+        <li class="array"><b>notifications</b> - This user's notifications. See: <a href="#std-objs-notification">standard notification object</a>.</li>
+        <li class="boolean"><b>pw</b> - Unknown <b>TODO</b>.</li>
+        <li class="integer"><b>xp</b> - Amount of this user's experience points.</li>
+      </ul>
+    </li>
+  </ul>
+</ul>
+
+
+<h3><a id="rest-get-users-me-history" href="#rest-get-users-me-history">GET users/me/history</a></h3>
+<!--
+{"data": [
+  {
+    "id": "0000000-0000-0000-0000-000000000000",
+    "media": {standard media object},
+    "room": {"name": "Room name", "slug": "roomslug"},
+    "score": {"grabs": int, "listeners": int, "negative": int, "positive": int, "skipped": int},
+    "timestamp": "2014-10-11 21:11:02.203029",
+    "user": {"id": user id, "username": "user's name"}
+  }, ...
+], "meta": {}, "status": "ok", "time": 2.4499893188476562} -->
+<b>TODO</b>
+
+
+<h3><a id="rest-post-users-bulk" href="#rest-post-users-bulk">POST users/bulk</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-users-avatar" href="#rest-put-users-avatar">PUT users/avatar</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-users-status" href="#rest-put-users-status">PUT users/status</a></h3>
+<h4><a id="rest-put-users-status-request" href="#rest-put-users-status-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="integer"><b>status</b> - New <a href="#std-vars-status">status</a> for this user.</li>
+  </ul>
+</ul>
+
+<h4><a id="rest-put-users-status-response" href="#rest-put-users-status-response">Response payload</a></h4>
+<b class="data">TODO - Add possible errors.</b>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b></li>
+</ul>
+
+
+<h3><a id="rest-put-users-language" href="#rest-put-users-language">PUT users/language</a></h3>
+Used to change this user's language.
+<h4><a id="rest-put-users-language-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="string"><b>language</b> - User's new <a href="#std-vars-language">language</a>.</li>
+  </ul>
+</ul>
+
+<h4><a id="rest-put-users-language-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b></li>
+  <li class="array"><b>requestError 400</b> - Invalid <b class="code">language</b> value.</li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">language</b> field.</li>
+  <ul>
+    <li class="string"><i class="string">language is required</i></li>
+  </ul>
+</ul>
+
+
+<h3><a id="rest-put-profile-blurb" href="#rest-put-profile-blurb">PUT profile/blurb</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-q-1-page-2-limit-3" href="#rest-get-rooms-q-1-page-2-limit-3">GET rooms?q=$1&amp;page=$2&amp;limit=$3</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-favorites-page-1-limit-2" href="#rest-get-rooms-favorites-page-1-limit-2">GET rooms/favorites?page=$1&amp;limit=$2</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-rooms" href="#rest-post-rooms">POST rooms</a></h3>
+<b>request</b>: {"name":"opl","private":false}<br />
+<b>ok</b>: {"data": [{"id": 86810, "name": "opl", "slug": "opl"}], "meta": {}, "status": "ok", "time": 99.05219078063965}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-validate-1" href="#rest-get-rooms-validate-1">GET rooms/validate/$1</a></h3>
+<b>ok</b> re: {"data": [{"slug": "dashb"}], "meta": {}, "status": "ok", "time": 5.206108093261719}<br />
+<b>invalid</b> re: {"data": [], "meta": {}, "status": "requestError", "time": 7.238864898681641}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-rooms-update" href="#rest-post-rooms-update">POST rooms/update</a></h3>
+requests:<br />
+{"name":"new rooms name"}<br />
+{"description":"new rooms description"}<br />
+{"welcome":"new rooms welcome message"}<br />
+<b>responses:</b><br />
+{"data": [], "meta": {}, "status": "ok", "time": 31.80098533630371}<br />
+{
+  "data": [
+    "At least 1 of these fields is required: name, description, welcome"
+  ], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 2.9630661010742188
+} (400)<br />
+<br />
+Changing multiple at once possible.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a></h3>
+Requires calling <a href="#rest-post-rooms-join">rooms/join</a> before.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-history" href="#rest-get-rooms-history">GET rooms/history</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-rooms-me" href="#rest-get-rooms-me">GET rooms/me</a></h3>
+Returns your rooms.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-rooms-join" href="#rest-post-rooms-join">POST rooms/join</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-rooms-favorites" href="#rest-post-rooms-favorites">POST rooms/favorites</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-rooms-favorites-1" href="#rest-delete-rooms-favorites-1">DELETE rooms/favorites/$1</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-votes" href="#rest-post-votes">POST votes</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-grabs" href="#rest-post-grabs">POST grabs</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-booth" href="#rest-get-booth">GET booth</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-booth" href="#rest-post-booth">POST booth</a></h3>
+Add yourself to waitlist.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-booth" href="#rest-delete-booth">DELETE booth</a></h3>
+Quit DJing.<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-booth-add" href="#rest-post-booth-add">POST booth/add</a></h3>
+<b>request</b>: {"id":5334480}<br />
+<b>responses</b>:<br />
+{"data": ["This request was understood but is forbidden."], "meta": {}, "status": "noValidPlaylist", "time": 18.564939498901367}<br />
+{"data": [], "meta": {}, "status": "ok", "time": 67.2149658203125}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-booth-remove-1" href="#rest-delete-booth-remove-1">DELETE booth/remove/$1</a></h3>
+$1 - id of user to remove
+<b>TODO</b>
+
+
+<h3><a id="rest-post-booth-move" href="#rest-post-booth-move">POST booth/move</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-booth-skip" href="#rest-post-booth-skip">POST booth/skip</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-booth-skip-me" href="#rest-delete-booth-skip-me">DELETE booth/skip/me</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-booth-lock" href="#rest-put-booth-lock">PUT booth/lock</a></h3>
+{"isLocked":true,"removeAllDJs":false}<br />
+<h4><a id="rest-put-booth-lock-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="boolean"><b>isLocked</b> - <i class="boolean">true</i> if booth should become locked, <i class="boolean">false</i> otherwise.</li>
+    <li class="boolean"><b>removeAllDJs</b> - <i class="boolean">true</i> if the waitlist should be cleared/just rank? (doesnt remove current dj), <i class="boolean">false</i> otherwise.</li>
+  </ul>
+</ul>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-booth-cycle" href="#rest-put-booth-cycle">PUT booth/cycle</a></h3>
+{"shouldCycle":false}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-chat-1" href="#rest-delete-chat-1">DELETE chat/$1</a></h3>
+$1 - message id
+<b>TODO</b>
+
+
+<h3><a id="rest-get-mutes" href="#rest-get-mutes">GET mutes</a></h3>
+{"data": [{"expires": 897, "id": 4231080, "moderator": "opl", "reason": 3, "username": "Tom The Boulder"}], "meta": {}, "status": "ok", "time": 14.811992645263672}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-mutes" href="#rest-post-mutes">POST mutes</a></h3>
+request: {"userID":5334480,"reason":3,"duration":"s (15 mins), m (30 mins), l (45mins)"}<br />
+
+response (invalid duration): {
+  "data": [
+    "Invalid duration h"
+  ], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 3.720998764038086
+} (400)<br />
+doesnt validate reason
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-mutes-1" href="#rest-delete-mutes-1">DELETE mutes/$1</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-bans" href="#rest-get-bans">GET bans</a></h3>
+{"data": [{"duration": "h", "id": 4231080, "moderator": "opl", "reason": 1, "timestamp": "2014-10-28 17:39:53.431437", "username": "Tom The Boulder"}], "meta": {}, "status": "ok", "time": 12.476921081542969}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-bans-add" href="#rest-post-bans-add">POST bans/add</a></h3>
+<b>request</b>: {"userID":5334480,"reason":5,"duration":"h (hour), d (day), f (forever)"}<br />
+</b>response on banning yourself (400)</b>: {
+  "data": [
+    "Trying to ban yourself?"
+  ], 
+  "meta": {}, 
+  "status": 403, 
+  "time": 8.892059326171875
+}<br />
+response on trying to ban higher ranked user: {
+  "data": [
+    "Cannot ban a higher ranking user"
+  ], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 20.30801773071289
+}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-bans-1" href="#rest-delete-bans-1">DELETE bans/$1</a></h3>
+not banned: {
+  "data": [], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 8.52513313293457
+} (404)<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-staff" href="#rest-get-staff">GET staff</a></h3>
+{"data": [{"avatarID": "rock14", "id": 4489709, "joined": "2014-06-06 20:58:00.513000", "level": 9, "role": 5, "username": "opl"}, {"avatarID": "base05", "id": 5334480, "joined": "2014-10-25 15:49:31.752502", "level": 4, "role": 2, "username": "nejey"}], "meta": {}, "status": "ok", "time": 33.9350700378418}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-staff-update" href="#rest-post-staff-update">POST staff/update</a></h3>
+request: {"userID":5334480,"roleID":1}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-staff-1" href="#rest-delete-staff-1">DELETE staff/$1</a></h3>
+response (not staff): {
+  "data": [], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 31.175851821899414
+} (404)<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-playlists" href="#rest-get-playlists">GET playlists</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-playlists" href="#rest-post-playlists">POST playlists</a></h3>
+request: {"name":"test"}<br />
+response: {"data": [{"active": false, "count": 0, "id": 5367655, "name": "test"}], "meta": {}, "status": "ok", "time": 13.460874557495117}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-playlists-1" href="#rest-delete-playlists-1">DELETE playlists/$1</a></h3>
+$1 - playlist id<br />
+<br />
+<b>{
+  "data": [
+    "Playlist ID does not exist"
+  ], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 5.400896072387695
+}</b>
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-put-playlists-1-activate" href="#rest-put-playlists-1-activate">PUT playlists/$1/activate</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-playlists-1-media" href="#rest-get-playlists-1-media">GET playlists/$1/media</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-playlists-media-q-1" href="#rest-get-playlists-media-q-1">GET playlists/media?q=$1</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-playlists-1-rename" href="#rest-put-playlists-1-rename">PUT playlists/$1/rename</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-playlists-1-media-insert" href="#rest-post-playlists-1-media-insert">POST playlists/$1/media/insert</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-playlists-1-media-delete" href="#rest-post-playlists-1-media-delete">POST playlists/$1/media/delete</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-playlists-1-media-move" href="#rest-put-playlists-1-media-move">PUT playlists/$1/media/move</a></h3>
+request: {"ids":[243892442],"beforeID":0}<br />
+<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-put-playlists-1-media-update" href="#rest-put-playlists-1-media-update">PUT playlists/$1/media/update</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-playlists-1-shuffle" href="#rest-put-playlists-1-shuffle">PUT playlists/$1/shuffle</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-friends" href="#rest-get-friends">GET friends</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-friends-invites" href="#rest-get-friends-invites">GET friends/invites</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-friends" href="#rest-post-friends">POST friends</a></h3>
+<h4><a href="#rest-post-friends-response">Response payload</a></h4>
+<ul class="jsondesc">
+<li class="array"><b>ok 200</b></li>
+<li class="array"><b>cannotFriendSelf 403</b></li>
+</ul>
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-friends-1" href="#rest-delete-friends-1">DELETE friends/$1</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-put-friends-ignore" href="#rest-put-friends-ignore">PUT friends/ignore</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-ignores" href="#rest-get-ignores">GET ignores</a></h3>
+{
+  "data": [
+    {
+      "id": 5334480, 
+      "username": "nejey"
+    }
+  ], 
+  "meta": {}, 
+  "status": "ok", 
+  "time": 10.658025741577148
+}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-post-ignores" href="#rest-post-ignores">POST ignores</a></h3>
+request: {"id":5334480}<br />
+responses:<br />
+{"data": [{"id": 5334480, "username": "nejey"}], "meta": {}, "status": "ok", "time": 13.70096206665039}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-ignores-1" href="#rest-delete-ignores-1">DELETE ignores/$1</a></h3>
+response: {
+  "data": [
+    {
+      "id": 5334480, 
+      "username": "nejey"
+    }
+  ], 
+  "meta": {}, 
+  "status": "ok", 
+  "time": 80.6269645690918
+}<br />
+<br />
+when user id invald: {
+  "data": [], 
+  "meta": {}, 
+  "status": "requestError", 
+  "time": 4.930973052978516
+} (404)<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-store-inventory" href="#rest-get-store-inventory">GET store/inventory</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-store-inventory-avatars" href="#rest-get-store-inventory-avatars">GET store/inventory/avatars</a></h3>
+{"data": [{"category": "base", "id": "base05", "type": "avatars"}, {"category": "classic", "id": "classic02", "type": "avatars"}, {"category": "classic", "id": "classic04", "type": "avatars"}, {"category": "classic", "id": "classic06", "type": "avatars"}, {"category": "classic", "id": "classic08", "type": "avatars"}, {"category": "classic", "id": "classic10", "type": "avatars"}, {"category": "classic", "id": "classic01", "type": "avatars"}, {"category": "classic", "id": "classic03", "type": "avatars"}, {"category": "classic", "id": "classic05", "type": "avatars"}, {"category": "classic", "id": "classic07", "type": "avatars"}, {"category": "classic", "id": "classic09", "type": "avatars"}, {"category": "classic", "id": "classic11", "type": "avatars"}, {"category": "base", "id": "base14", "type": "avatars"}, {"category": "hiphop", "id": "hiphop14", "type": "avatars"}, {"category": "2014hw", "id": "2014hw02", "type": "avatars"}, {"category": "base", "id": "base10", "type": "avatars"}, {"category": "base", "id": "base08", "type": "avatars"}, {"category": "2014hw", "id": "2014hw06", "type": "avatars"}, {"category": "2014hw", "id": "2014hw13", "type": "avatars"}, {"category": "base", "id": "base04", "type": "avatars"}, {"category": "2014hw", "id": "2014hw14", "type": "avatars"}, {"category": "base", "id": "base13", "type": "avatars"}, {"category": "2014hw", "id": "2014hw10", "type": "avatars"}, {"category": "base", "id": "base03", "type": "avatars"}, {"category": "base", "id": "base02", "type": "avatars"}, {"category": "2014hw", "id": "2014hw07", "type": "avatars"}, {"category": "base", "id": "base07", "type": "avatars"}, {"category": "base", "id": "base01", "type": "avatars"}, {"category": "base", "id": "base09", "type": "avatars"}, {"category": "2014hw", "id": "2014hw05", "type": "avatars"}, {"category": "2014hw", "id": "2014hw01", "type": "avatars"}, {"category": "2014hw", "id": "2014hw08", "type": "avatars"}, {"category": "base", "id": "base06", "type": "avatars"}, {"category": "2014hw", "id": "2014hw09", "type": "avatars"}, {"category": "2014hw", "id": "2014hw11", "type": "avatars"}, {"category": "base", "id": "base11", "type": "avatars"}, {"category": "2014hw", "id": "2014hw04", "type": "avatars"}, {"category": "2014hw", "id": "2014hw15", "type": "avatars"}, {"category": "base", "id": "base15", "type": "avatars"}, {"category": "2014hw", "id": "2014hw12", "type": "avatars"}, {"category": "2014hw", "id": "2014hw03", "type": "avatars"}, {"category": "base", "id": "base12", "type": "avatars"}], "meta": {}, "status": "ok", "time": 13.647794723510742}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-get-store-products-1-2" href="#rest-get-store-products-1-2">GET store/products/$1/$2</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-store-purchase" href="#rest-post-store-purchase">POST store/purchase</a></h3>
+{"id":74}<br />
+{"data": [{"count": 1, "ep": 30758, "name": "rock14"}], "meta": {}, "status": "ok", "time": 43.116092681884766}<br />
+<b>TODO</b>
+
+
+<h3><a id="rest-delete-notifications-1" href="#rest-delete-notifications-1">DELETE notifications/$1</a></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-news" href="#rest-get-news">GET news</a></h3>
+<b>TODO</b>
+
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="string">stuff</li>
+    <li class="integer">other stuff
+      <ul>
+        <li class="array">Things las oklnhaklsd hgkgjh oka dsokllhgalo hlg ahll lhljljljkljkljkljkkm lkm l m,.. ,mm, .m ,.,m.adf kjlhjhglkaoikghijghihgjkadj glkadl lnkalnd lknda lknldg anlk.a;kgj adgj ;lkdja l;kgjhsd jghl;khsdglk hl</li>
+        <li class="float">stuff again. a lot of stuff so it overflow to the other line aofhkaghnlk salkg jlkagj lkajjlk;djagl;kjdlgkjamldsgmlkad glkjnlkvanoiklfhnjlkanlkvndalvknhokdagnlkdn nldng nn danlk nlknlk nlknlv dav adv a vd</li>
+      </ul>
+    </li>
+    <li class="integer">moar stuff</li>
+  </ul>
+</ul>
+
+
+
+<h1><a id="sock" href="#sock">WebSocket protocol</a></h1>
+<b>TODO</b>: describe frame payload
+
+
+<h2><a id="sock-in" href="#sock-in">Incoming messages</a></h2>
+<h3><a id="sock-in-chat" href="#sock-in-chat">chat</a></h3>
+Sent whenever a new chat message is sent by any user, including this user.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>message</b> - Message's text.</li>
+    <li class="string"><b>un</b> - Sender's username.</li>
+    <li class="string"><b>type</b> - Message's type. <i class="string">message</i></li>
+    <li class="string"><b>uid</b> - Sender's ID.</li>
+    <li class="string"><b>cid</b> - Message's ID.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-chatdelete" href="#sock-in-chatdelete">chatDelete</a></h3>
+Sent when a chat message gets deleted.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>c</b> - Deleted message's ID.</li>
+    <li class="integer"><b>u</b> - Removing user's ID.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-earn" href="#sock-in-earn">earn</a></h3>
+Sent every 5 minutes to update this users experience points and Plug Points. This message is also used by Plug.dj to show level up dialogs.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>xp</b> - This user's current experience points.</li>
+    <li class="integer"><b>ep</b> - This user's current Plug Points.</li>
+    <li class="integer"><b>level</b> - This user's current level.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-grab" href="#sock-in-grab">grab</a></h3>
+Sent when some user grabs currently played song.
+<ul class="jsondesc">
+  <li class="integer"><b>p</b> - Grabbing user's ID.</li>
+</ul>
+
+<h3><a id="sock-in-vote" href="#sock-in-vote">vote</a></h3>
+Sent when some user woots or mehs currently played song.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>i</b> - Voting user's ID.</li>
+    <li class="integer"><b>v</b> - Voting user's vote. <i class="integer">1</i> if woot, <i class="integer">-1</i> if meh.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-advance" href="#sock-in-advance">advance</a></h3>
+Sent when a new media is played. The object is empty if there's no DJ.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>c</b> - Current DJ's user ID.</li>
+    <li class="array"><b>d</b> - Array of user IDs of users in wait list.</li>
+    <li class="string"><b>h</b> - Unknown.</li>
+    <li class="object"><b>m</b> - Current <a href="#std-objs-media">media</a>.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-userjoin" href="#sock-in-userjoin">userJoin</a></h3>
+Sent when a user joins or refreshes. If this message was sent and that user is still in the room it means he/she refreshed. <b>TODO: rephrase that?</b>
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>avatarID</b> - Joining users avatar.</li>
+    <li class="integer"><b>badge</b> - Joining users <a href="#std-vars-badge">badge</a>.</li>
+    <li class="string"><b>blurb</b> - Joining users blurb (description in users profile).</li>
+    <li class="integer"><b>gRole</b> - Joining users <a href="#std-vars-global-role">global role</a>.</li>
+    <li class="integer"><b>id</b> - Joining users ID.</li>
+    <li class="string"><b>joined</b> - Joining users registration <a href="#std-vars-date">date</a>.</li>
+    <li class="integer"><b>level</b> - Joining users experience level.</li>
+    <li class="integer"><b>role</b> - Joining users <a href="#std-vars-role">role</a>.</li>
+    <li class="string"><b>slug</b> - Joining users slug.</li>
+    <li class="integer"><b>status</b> - Joining users <a href="#std-vars-status">status</a>.</li>
+    <li class="string"><b>username</b> - Joining users username.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-userleave" href="#sock-in-userleave">userLeave</a></h3>
+Sent when a user leaves.
+<ul class="jsondesc">
+  <li class="integer"><b>p</b> - Leaving users ID.</li>
+</ul>
+
+<h3><a id="sock-in-djlistupdate" href="#sock-in-djlistupdate">djListUpdate</a></h3>
+Sent when the wait list gets updated.
+<ul class="jsondesc">
+  <li class="array"><b>p</b> - Array of user IDs of users in wait list.</li>
+</ul>
+
+<h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
+Sent when some users data changes. Plug.dj's code doesn't remove any fields from this message except for <b class="code">id</b> and just appends them to that users object, which means that in theory it can update any data of that user. The only fields that appear in this message at once are <b class="code">id</b> and one other field from below.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
+    <li class="integer"><b>level</b> - That users new experience level.</li>
+    <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
+    <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
+Sent when some users data changes. Any field except for <b class="code">id</b> is going to get appended to that users object.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-ban" href="#sock-in-ban">ban</a></h3>
+Sent when this user gets banned from the community.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>r</b> - Ban reason ID. Range: <i class="integer">1</i>-<i class="integer">5</i> This value may be out of range.</li>
+    <li class="string"><b>t</b> - Unknown. <i class="string">ban</i> <b>TODO: investigate on this one</b></li>
+    <li class="string"><b>d</b> - Ban duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-modmute" href="#sock-in-modmute">modMute</a></h3>
+Sent when some user gets muted.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>id</b> - Muted users ID.</li>
+    <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
+    <li class="string"><b>m</b> - Muting user's username.</li>
+    <li class="string"><b>t</b> - Muted user's username.</li>
+    <li class="string"><b>d</b> - Duration. <i string="string">l</i> if long (45 minutes), <i string="string">m</i> if medium (30 minutes), <i string="string">s</i> if short (15 minutes) or <i string="string">o</i> if unmute.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-skip" href="#sock-in-skip">skip</a></h3>
+Sent when the current DJ decides to skip his song.
+<ul class="jsondesc">
+  <li class="string"><b>p</b> - Current DJ's username.</li>
+</ul>
+
+<h3><a id="sock-in-modskip" href="#sock-in-modskip">modSkip</a></h3>
+Sent when current DJ gets skipped by a staff member.
+<ul class="jsondesc">
+  <li class="string"><b>p</b> - Skipping users name.</li>
+</ul>
+
+<h3><a id="sock-in-modban" href="#sock-in-modban">modBan</a></h3>
+Sent when a user gets banned.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>u</b> - Banned user's ID.</li>
+    <li class="string"><b>m</b> - Banning user's username.</li>
+    <li class="string"><b>t</b> - Banned user's username.</li>
+    <li class="string"><b>d</b> - Duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-modstaff" href="#sock-in-modstaff">modStaff</a></h3>
+Sent when user's role changes.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="object"><b>u</b> - Promoted user's data.
+      <ul>
+        <li class="integer"><b>i</b> - Promoted user's ID.</li>
+        <li class="integer"><b>p</b> - Promoted user's new <a href="#std-vars-role">role</a>.</li>
+        <li class="string"><b>n</b> - Promoted user's username.</li>
+      </ul>
+    </li>
+    <li class="string"><b>m</b> - Promoting user's username.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-modadddj" href="#sock-in-modadddj">modAddDJ</a></h3>
+Sent when a user gets added to wait list.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>m</b> - Adding user's username.</li>
+    <li class="string"><b>t</b> - Added user's username.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-modremovedj" href="#sock-in-modremovedj">modRemoveDJ</a></h3>
+Sent when a user gets removed from wait list.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>m</b> - Removing user's username.</li>
+    <li class="string"><b>t</b> - Removed user's username.</li>
+    <li class="boolean"><b>d</b> - Unknown.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-djlistcycle" href="#sock-in-djlistcycle">djListCycle</a></h3>
+Sent when wait list cycle gets enabled or disabled.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="integer"><b>u</b> - Toggling user's ID.</li>
+    <li class="string"><b>t</b> - Toggling user's username.</li>
+    <li class="boolean"><b>f</b> - Wait list cycle state. <i class="boolean">true</i> if enabled, <i class="boolean">false</i> otherwise.</li>
+  </ul>
+</ul>
+
+<h3><a id="sock-in-roomnameupdate" href="#sock-in-roomnameupdate">roomNameUpdate</a></h3>
+Sent when room's name changes.
+<ul class="jsondesc">
+  <li class="object"><b>p</b></li>
+  <ul>
+    <li class="string"><b>u</b> - Changing user's username.</li>
+    <li class="string"><b>n</b> - Room's new name.</li>
+  </ul>
+</ul>
+
+
+<h2><a id="out" href="#out">Outgoing messages</a></h2>
+
+
+
+<h1><a id="std" href="#std">Standards</a></h1>
+
+<h2><a id="std-vars" href="#std-vars">Variables</a></h2>
+<h3><a id="std-vars-status" href="std-vars-status">Status</a></h3>
+Integer representing users status.
+<ul class="jsondesc">
+<li class="integer"><b>0</b> - Available</li>
+<li class="integer"><b>1</b> - Away</li>
+<li class="integer"><b>2</b> - Working</li>
+<li class="integer"><b>3</b> - Gaming</li>
+</ul>
+
+
+<h3><a id="std-vars-role" href="std-vars-role">Role</a></h3>
+Integer representing users role in a room.
+<ul class="jsondesc">
+<li class="integer"><b>0</b> - User</li>
+<li class="integer"><b>1</b> - Resident DJ</li>
+<li class="integer"><b>2</b> - Bouncer</li>
+<li class="integer"><b>3</b> - Manager</li>
+<li class="integer"><b>4</b> - Co-Host</li>
+<li class="integer"><b>5</b> - Host</li>
+</ul>
+
+
+<h3><a id="std-vars-global-role" href="std-vars-global-role">Global Role</a></h3>
+Integer representing users role on entire Plug.dj.
+<ul class="jsondesc">
+<li class="integer"><b>0</b> - None</li>
+<li class="integer"><b>1</b> - Leader</li>
+<li class="integer"><b>2</b> - Volounteer</li>
+<li class="integer"><b>3</b> - Brand Ambassador</li>
+<li class="integer"><b>4</b> - Admin</li>
+</ul>
+
+
+<h3><a id="std-vars-badge" href="std-vars-badge">Badge</a></h3>
+Integer representing users badge obtained by being a registered user before July 2014 and migrating your account or being a beta tester.
+<ul class="jsondesc">
+<li class="integer"><b>0</b> - None</li>
+<li class="integer"><b>1</b> - Beta Tester</li>
+<li class="integer"><b>2</b> - Early Adopter</li>
+<li class="integer"><b>3</b> - Original Gangster</li>
+<li class="integer"><b>4</b> - Plug Superstar</li>
+</ul>
+
+
+<h3><a id="std-vars-language" href="std-vars-language">Language</a></h3>
+<ul class="jsondesc">
+<li class="string"><b>bg</b> - Bulgarian</li>
+<li class="string"><b>cs</b> - Czech</li>
+<li class="string"><b>en</b> - English</li>
+<li class="string"><b>fi</b> - Finnish</li>
+<li class="string"><b>fr</b> - French</li>
+<li class="string"><b>ms</b> - Malay</li>
+<li class="string"><b>nl</b> - Dutch</li>
+<li class="string"><b>pt</b> - Portuguese</li>
+<li class="string"><b>sk</b> - Slovak</li>
+<li class="string"><b>zh</b> - Chinese</li>
+</ul>
+
+
+<h3><a id="std-vars-date" href="std-vars-date">Date</a></h3>
+Every date in Plug.dj's code uses the following format:<br />
+yyyy-mm-dd hh:mm:ss.iiiiii
+<ul class="jsondesc">
+<li><b>yyyy</b> - Year. Example: <i class="integer">2014</i></li>
+<li><b>mm</b> - Month. Range: <i class="integer">01</i>-<i class="integer">12</i>. Example: <i class="integer">12</i></li>
+<li><b>dd</b> - Day. Range: <i class="integer">01</i>-<i class="integer">31</i>. Example: <i class="integer">14</i></li>
+<li><b>hh</b> - Hours. Range: <i class="integer">00</i>-<i class="integer">23</i>. Example: <i class="integer">08</i></li>
+<li><b>mm</b> - Minutes. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">03</i></li>
+<li><b>mm</b> - Seconds. Range: <i class="integer">00</i>-<i class="integer">59</i>. Example: <i class="integer">00</i></li>
+<li><b>iiiiii</b> - Microseconds. Range: <i class="integer">000000</i>-<i class="integer">999999</i>. Example: <i class="integer">320600</i></li>
+</ul>
+
+
+
+<h2><a id="std-objects" href="#std-objects">Objects</a></h2>
+<h3><a id="std-objs-notification" href="std-objs-notification">Notification</a></h3>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="string"><b>action</b> - Notification's type. <i class="string">levelUp</i></li>
+    <li class="integer"><b>id</b> - Notification's ID.</li>
+    <li class="string"><b>timestamp</b> - Notification's creation <a href="#std-vars-date">time</a>.</li>
+    <li class="string"><b>value</b> - Notification's value dependant on notification's type.</li>
+  </ul>
+</ul>
+Notification values for different notification types:
+<ul class="jsondesc">
+  <li class="string"><b>levelUp</b> - User's experience level as string.</li>
+</ul>
+
+
+<h3><a id="std-objs-media" href="std-objs-media">Media</a></h3>
+<ul class="jsondesc">
+  <li class="object">Root object.</li>
+  <ul>
+    <li class="string"><b>author</b> - Media's author.</li>
+    <li class="integer"><b>format</b> - Media's format. <i class="integer">1</i> if YouTube, <i class="integer">2</i> if SoundCloud.</li>
+    <li class="string"><b>image</b> - Media's thumbnail URL.</li>
+    <li class="string"><b>cid</b> - Media's ID (YouTube video or SoundCloud song ID).</li>
+    <li class="integer"><b>duration</b> - Media's duration in seconds.</li>
+    <li class="string"><b>title</b> - Media's title.</li>
+    <li class="integer"><b>id</b> - Plug.dj's media ID (used for playlists).</li>
+  </ul>
+</ul>
+
+</body>
+</html>
+
+<!--
+chatDelete				v	{"c":"message id","u":userid}
+chat					v	{"message":"message","un":"user display name","type":"message/possibly other","uid":user id,"cid":"message id"}
+userUpdate				v	{"i":user id,"status":status}
+         				v	{"i":user id,"level":new level}
+         				v	{"i":user id,"avatarID":"avatar name"}
+vote					v	{"i":user id,"v":1/-1}
+earn					v	{"xp":xp,"ep":int,"level":level}
+grab					v	user id
+modMute					v	{"i":muted user id,"r":1 for mute/0 for unmute,"m":"mod name","t":"muted user name","d":"m/s/o/??"}
+userLeave				v	user id
+djListUpdate			v	[user id,user id,...]
+advance					v	{"c":current dj id,"d":[array,of,user,ids,from,dj,waitlist],"h":"string"
+									,"m":{"author":"song author","format":1 for youtube/??,"image":"url to song image","cid":"song id"
+									,"duration":song duration,"title":"song title","id":int}}
+modBan					v	{"u":banned user id,"m":"banning users name","t":"name of banned user","d":"f for forever/??"}
+modStaff				v	{"u":[{"i":user id,"p":new role id,"n":"promoted users name"}],"m":"promoting users name"}
+modRemoveDJ				?	{"m":"removing users name","t":"removed users name","d":boolean}
+roomNameUpdate				{"u":changing users id,"n":"new room name"}
+roomDescriptionUpdate		???
+roomWelcomeUpdate			???
+djListCycle				v	{"u":user id,"m":"user name","f":true for enabled/false for disabled}
+ban						v	{"r":1,"t":"ban","d":"f"}
+modSkip					v	"username of staff member who skipped"
+skip					v	"username of current dj"
+userJoin				v	{"username":"DrOktopus","status":0,"gRole":0,"level":1,"avatarID":"base14","joined":"2014-10-30 16:26:22.440357","slug":"droktopus","role":0,"badge":0,"id":5359750,"blurb":null}
+modAddDJ				v	{"m":"user adding","t":"user added"}
+modMoveDJ					{"u":"moved users username","m":"user who moved","o":old position,"n":new position}
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
