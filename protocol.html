@@ -160,7 +160,9 @@ If no <i>Request payload</i>, <i>Request variable</i> or <i>Response payload</i>
 These are the response statuses alone with their respective HTTP response codes that you can recieve from all endpoints.
 <ul class="jsondesc">
   <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
-  <li class="string"><b>notAuthorized 403</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
+  <li class="string"><b>notAuthorized 401</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
+  <li class="string"><b>*html 400 page* 400</b> - Invalid or empty http request payload.</li>
+  <li class="string"><b>500 500</b> - Invalid or empty http request payload. Please note that the <b class="code">status</b> field is an integer in this case.</li>
   <li class="string"><b>TODO</b> - Write more about those if any more of them exists.</li>
 </ul>
 
@@ -171,7 +173,7 @@ These are the response statuses alone with their respective HTTP response codes 
       <li class="array"><b>data</b> - Varies across different endpoints.</li>
       <li class="object"><b>meta</b> - Unknown. Seems to be always empty.</li>
       <li class="string"><b>status</b> - Status code. <i class="string">ok</i> if request was successfully completed, other values vary across different endpoints.</li>
-      <li class="float"><b>time</b> - Time it took to complete the request in <b>TODO</b>.</li>
+      <li class="float"><b>time</b> - Time it took to complete the request in milliseconds.</li>
     </ul>
   </li>
 </ul>
@@ -188,7 +190,7 @@ Below this is the format used to describe different <i>data</i> contents dependi
       </li>
     </ul>
   </li>
-  <li class="array"><b>anotherStatusCode 403</b> - Another status code.
+  <li class="array"><b>anotherStatus 403</b> - Another response status.
     <ul>
       <li class="object">Object #1
         <ul>
@@ -287,7 +289,7 @@ Returns all public data about requested user.
       <li class="integer"><b>id</b> - User's ID.</li>
       <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
       <li class="integer"><b>level</b> - User's experience level.</li>
-      <li class="array"><b>pVibes</b> - Unknown <b>TODO</b>.</li>
+      <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
       <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
       <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
       <li class="string"><b>username</b> - User's name. May change.</li>
@@ -338,10 +340,29 @@ Returns all data about this user.
 
 
 <h3><a id="rest-put-users-avatar" href="#rest-put-users-avatar">PUT users/avatar</a></h3>
-<b>TODO</b>
+Used to change this user's avatar.
+<h4><a id="rest-put-users-avatar-request" href="#rest-put-users-avatar-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>id</b> - This user's new avatar ID.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-put-users-avatar-response" href="#rest-put-users-avatar-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>requestError 403</b> - Invalid <b class="code">id</b> value.</li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">id</b> field.
+    <ul>
+      <li class="string"><i class="string">id is required</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-put-users-status" href="#rest-put-users-status">PUT users/status</a></h3>
+Used to change this user's status.
 <h4><a id="rest-put-users-status-request" href="#rest-put-users-status-request">Request payload</a></h4>
 <ul class="jsondesc">
   <li class="object">Root object.
@@ -352,9 +373,17 @@ Returns all data about this user.
 </ul>
 
 <h4><a id="rest-put-users-status-response" href="#rest-put-users-status-response">Response payload</a></h4>
-<b class="data">TODO - Add possible errors.</b>
 <ul class="jsondesc">
-  <li class="array"><b>ok 200</b></li>
+  <li class="array"><b>requestError 400</b> - Invalid <b class="code">status</b> value.
+    <ul>
+      <li class="string"><i class="string">invalidStatus</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">status</b> field.
+    <ul>
+      <li class="string"><i class="string">status is required</i></li>
+    </ul>
+  </li>
 </ul>
 
 
@@ -382,7 +411,24 @@ Used to change this user's language.
 
 
 <h3><a id="rest-put-profile-blurb" href="#rest-put-profile-blurb">PUT profile/blurb</a></h3>
-<b>TODO</b>
+Used to change this user's blurb.
+<h4><a id="rest-put-profile-blurb-request" href="#rest-put-profile-blurb-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>blurb</b> - This user's new blurb. Gets cut to 80 characters if longer than that.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-put-profile-blurb-response" href="#rest-put-profile-blurb-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">blurb</b> field.
+    <ul>
+      <li class="string"><i class="string">blurb is required</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-rooms-q-1-page-2-limit-3" href="#rest-get-rooms-q-1-page-2-limit-3">GET rooms?q=$1&amp;page=$2&amp;limit=$3</a></h3>
@@ -924,7 +970,7 @@ Sent when some user gets muted.
       <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
       <li class="string"><b>m</b> - Muting user's username.</li>
       <li class="string"><b>t</b> - Muted user's username.</li>
-      <li class="string"><b>d</b> - Duration. <i string="string">l</i> if long (45 minutes), <i string="string">m</i> if medium (30 minutes), <i string="string">s</i> if short (15 minutes) or <i string="string">o</i> if unmute.</li>
+      <li class="string"><b>d</b> - Duration. <i class="string">l</i> if long (45 minutes), <i class="string">m</i> if medium (30 minutes), <i class="string">s</i> if short (15 minutes) or <i class="string">o</i> if unmute.</li>
     </ul>
   </li>
 </ul>
@@ -1048,7 +1094,7 @@ Integer representing users role in a room.
 
 
 <h3><a id="std-vars-global-role" href="std-vars-global-role">Global Role</a></h3>
-Integer representing users role on entire Plug.dj.
+Integer representing users role on entire Plug.dj. It's worth noting that even though there is internal separation for Leaders, Volounteers and Brand Ambassadors Plug.dj shows them all as Brand Ambassadors anyway.
 <ul class="jsondesc">
   <li class="integer"><b>0</b> - None</li>
   <li class="integer"><b>1</b> - Leader</li>
