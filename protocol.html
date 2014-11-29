@@ -282,17 +282,21 @@ Returns all public data about requested user.
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b>
     <ul>
-      <li class="string"><b>avatarID</b> - User's avatar ID.</li>
-      <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
-      <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
-      <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
-      <li class="integer"><b>id</b> - User's ID.</li>
-      <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
-      <li class="integer"><b>level</b> - User's experience level.</li>
-      <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
-      <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
-      <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
-      <li class="string"><b>username</b> - User's name. May change.</li>
+      <li class="object">Root object.
+        <ul>
+          <li class="string"><b>avatarID</b> - User's avatar ID.</li>
+          <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
+          <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
+          <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
+          <li class="integer"><b>id</b> - User's ID.</li>
+          <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
+          <li class="integer"><b>level</b> - User's experience level.</li>
+          <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
+          <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
+          <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
+          <li class="string"><b>username</b> - User's name. May change.</li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li class="array"><b>notFound 404</b> - User with requested ID doesn't exist.</li>
@@ -475,8 +479,6 @@ Changing multiple at once possible.<br />
 
 
 <h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a></h3>
-Requires calling <a href="#rest-post-rooms-join">rooms/join</a> before.<br />
-<br />
 <b>TODO</b>
 
 
@@ -492,8 +494,6 @@ Returns your rooms.<br />
 
 <h3><a id="rest-post-rooms-join" href="#rest-post-rooms-join">POST rooms/join</a></h3>
 <b>TODO</b>
-
-
 <h3><a id="rest-post-rooms-favorites" href="#rest-post-rooms-favorites">POST rooms/favorites</a></h3>
 <b>TODO</b>
 
@@ -503,11 +503,65 @@ Returns your rooms.<br />
 
 
 <h3><a id="rest-post-votes" href="#rest-post-votes">POST votes</a></h3>
-<b>TODO</b>
+Used to vote for the currently played song. If the <b class="code">historyID</b> value doesn't match the one of currently played song's or there is no song playing at the moment then the vote doesn't count, but the response code is still <b class="code">ok 200</b>. It is possible to vote when this user is DJing.<br />
+<h4><a id="rest-post-votes-request" href="#rest-post-votes-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="integer"><b>direction</b> - <i class="integer">1</i> if woot, <i class="integer">-1</i> if meh.</li>
+      <li class="string"><b>historyID</b> - Currently played song's history ID.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-votes-response" href="#rest-post-votes-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>invalidVote 400</b> - Invalid <b class="code">direction</b> value.</li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">direction</b> field.
+    <ul>
+      <li class="string"><i class="string">direction is required</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">historyID</b> field.
+    <ul>
+      <li class="string"><i class="string">historyID is required</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-post-grabs" href="#rest-post-grabs">POST grabs</a></h3>
-<b>TODO</b>
+Used to grab currently played song.
+<h4><a id="rest-post-grabs-request" href="#rest-post-grabs-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="integer"><b>playlistID</b> - ID of the playlist the song should be added to. <b>TODO: rephrase this</b></li>
+      <li class="string"><b>historyID</b> - Currently played song's history ID.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-grabs-response" href="#rest-post-grabs-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="boolean"><b>active</b> - <i class="boolean">true</i> if the playlist is active, <i class="boolean">false</i> otherwise.</li>
+          <li class="integer"><b>count</b> - Playlist's new item count.</li>
+          <li class="integer"><b>id</b> - Playlist's ID.</li>
+          <li class="string"><b>name</b> - Playlist's name.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>forbidden 403</b> - <b class="code">historyID</b> doesn't match the one of currently played song's or specified playlist doesn't exist/belong to this user or this user is currently DJing.
+    <ul>
+      <li class="string"><i class="string">This request was understood but is forbidden.</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-booth" href="#rest-get-booth">GET booth</a></h3>
