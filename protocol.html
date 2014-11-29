@@ -152,8 +152,8 @@ i {
 This document has been made to help other developers struggling with Plug's silly procotol. Maybe I'll write a bit more here later.
 
 <h1><a id="rest" href="#rest">REST API</a></h1>
-All requests to REST API require <i>Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each requests URL starts with <i>https://plug.dj/_/</i>. If the request contains any content it must have <i>Content-Type</i> header set to <i>application/json</i>.<br />
-If no <i>Request payload</i>, <i>Request variable</i> or <i>Response payload</i> section is defined, then such is empty or doesn't exist.
+All requests to REST API require <i class="string">Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each requests URL starts with <i class="string">https://plug.dj/_/</i>. If the request contains any content it must have <i class="string">Content-Type</i> header set to <i class="string">application/json</i>.<br />
+If no Request payload, Request variable or Response payload section is defined, then such is empty or doesn't exist.
 
 <h2><a id="rest-standard" href="#rest-standard">Standard response elements</a></h2>
 <h4><a id="rest-standard-response-codes" href="#rest-standard-response-codes">Standard response codes</a></h4>
@@ -178,7 +178,7 @@ These are the response statuses alone with their respective HTTP response codes 
   </li>
 </ul>
 
-Below this is the format used to describe different <i>data</i> contents depending on <i>status</i>:
+Below is the format used to describe different <b class="code">data</b> contents depending on <b class="code">status</b>:
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b> - Status code this payload description corresponds to followed by HTTP response code.
     <ul>
@@ -208,7 +208,7 @@ Below this is the format used to describe different <i>data</i> contents dependi
 </ul>
 
 <h4><a id="rest-standard-session" href="#rest-standard-session">Session identificator</a></h4>
-Every response from Plug.dj contains a <i>Set-Cookie</i> header containing <i>session</i> cookie. After aquiring that session ID you should use it for every request you make to the REST API, otherwise it will treat you as unauthenticated.
+Every response from Plug.dj contains a <i class="string">Set-Cookie</i> header containing <i class="string">session</i> cookie. After aquiring that session ID you should use it for every request you make to the REST API, otherwise it will treat you as unauthenticated.
 
 
 <h2><a id="rest-endpoints" href="#rest-endpoints">Endpoints</a></h2>
