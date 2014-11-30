@@ -153,7 +153,7 @@ This document has been made to help other developers struggling with Plug's sill
 
 <h1><a id="rest" href="#rest">REST API</a></h1>
 All requests to REST API require <i class="string">Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each requests URL starts with <i class="string">https://plug.dj/_/</i>. If the request contains any content it must have <i class="string">Content-Type</i> header set to <i class="string">application/json</i>.<br />
-If no Request payload, Request variable or Response payload section is defined, then such is empty or doesn't exist.
+If no Request payload, Request variables or Response payload section is defined, then such is empty or doesn't exist.
 
 <h2><a id="rest-standard" href="#rest-standard">Standard response elements</a></h2>
 <h4><a id="rest-standard-response-codes" href="#rest-standard-response-codes">Standard response codes</a></h4>
@@ -254,9 +254,15 @@ Used for authenticating user using Facebook account.<br />
 
 
 <h3><a id="rest-get-auth-token" href="#rest-get-auth-token">GET auth/token</a></h3>
-{"data": ["TOKEN"], "meta": {}, "status": "ok", "time": 44.656991958618164}<br />
-<br />
-<b>TODO</b>
+Returns an auth token used by WebSocket to authenticate to the server.
+<h4><a id="rest-post-auth-login-response" href="#rest-post-auth-login-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="string">The requested auth token.</li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-delete-auth-session" href="#rest-delete-auth-session">DELETE auth/session</a></h3>
@@ -444,17 +450,77 @@ Used to change this user's blurb.
 
 
 <h3><a id="rest-post-rooms" href="#rest-post-rooms">POST rooms</a></h3>
-<b>request</b>: {"name":"opl","private":false}<br />
-<b>ok</b>: {"data": [{"id": 86810, "name": "opl", "slug": "opl"}], "meta": {}, "status": "ok", "time": 99.05219078063965}<br />
-<br />
-<b>TODO</b>
+Used to create rooms.
+<h4><a id="rest-post-rooms-request" href="#rest-post-rooms-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>name</b> - New room's name.</li>
+      <li class="string"><b>private</b> - New room's visibility. <i class="boolean">true</i> if private, <i class="boolean">false</i> if public.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-rooms-response" href="#rest-post-rooms-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="integer"><b>id</b> - New room's ID.</li>
+          <li class="string"><b>name</b> - New room's name.</li>
+          <li class="string"><b>slug</b> - New room's slug.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 403</b> - Room with slug generated from that name already exists.
+    <ul>
+      <li class="string"><i class="string">Room already exists</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Name is empty or longer than 32 characters.
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="string"><i class="string">Room name must be at least 1 character in length and no more than 32</i></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">name</b> field.
+    <ul>
+      <li class="string"><i class="string">name is required</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - Missing <b class="code">private</b> field.
+    <ul>
+      <li class="string"><i class="string">private is required</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-rooms-validate-1" href="#rest-get-rooms-validate-1">GET rooms/validate/$1</a></h3>
-<b>ok</b> re: {"data": [{"slug": "dashb"}], "meta": {}, "status": "ok", "time": 5.206108093261719}<br />
-<b>invalid</b> re: {"data": [], "meta": {}, "status": "requestError", "time": 7.238864898681641}<br />
-<br />
-<b>TODO</b>
+Used to check if room name enetered by user is a correct name for a room and if it's not already in use. Please note that leaving <b class="code">$1</b> empty results in http 404 response.
+<h4><a id="rest-rooms-validate-1-variables" href="#rest-rooms-validate-1-variables">Request variables</a></h4>
+<ul class="jsondesc">
+  <li class="string"><b>$1</b> - Tested room name.</li>
+</ul>
+
+<h4><a id="rest-get-rooms-validate-1-response" href="#rest-get-rooms-validate-1-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="string"><b>slug</b> - Room slug created from tested room name.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 403</b> - Invalid name.</li>
+</ul>
 
 
 <h3><a id="rest-post-rooms-update" href="#rest-post-rooms-update">POST rooms/update</a></h3>
@@ -476,6 +542,35 @@ requests:<br />
 Changing multiple at once possible.<br />
 <br />
 <b>TODO</b>
+<h4><a id="rest-post-rooms-update-request" href="#rest-post-rooms-update-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>description</b> - New room description.</li>
+      <li class="string"><b>name</b> - New room name.</li>
+      <li class="string"><b>welcome</b> - New room welcome message.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-rooms-update-response" href="#rest-post-rooms-update-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>requestError 400</b> - At least one field is required.
+    <ul>
+      <li class="string"><i class="string">At least 1 of these fields is required: name, description, welcome</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 400</b> - This user is not a staff member.
+    <ul>
+      <li class="string"><i class="string">Not a staff member of room</i></li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 403</b> - This user's role has to be at least Co-Host.
+    <ul>
+      <li class="string"><i class="string">Must be a Co-Host or Host to edit room meta</i></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a></h3>
@@ -581,15 +676,42 @@ Quit DJing.<br />
 
 
 <h3><a id="rest-post-booth-add" href="#rest-post-booth-add">POST booth/add</a></h3>
-<b>request</b>: {"id":5334480}<br />
-<b>responses</b>:<br />
-{"data": ["This request was understood but is forbidden."], "meta": {}, "status": "noValidPlaylist", "time": 18.564939498901367}<br />
-{"data": [], "meta": {}, "status": "ok", "time": 67.2149658203125}<br />
-<b>TODO</b>
+Used to add other users to the wait list.
+<h4><a id="rest-post-booth-add-request" href="#rest-post-booth-add-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="integer"><b>id</b> - Target's ID.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-booth-add-response" href="#rest-post-booth-add-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="object"><b>requestError 403</b> - This user's role has to be at least bouncer.
+    <ul>
+      <li class="string"><i class="string">Not a moderator in the room</i></li>
+    </ul>
+  </li>
+  <li class="object"><b>noValidPlaylist 403</b> - Target has no activated playlist or it is empty.
+    <ul>
+      <li class="string"><i class="string">This request was understood but is forbidden.</i></li>
+    </ul>
+  </li>
+  <li class="object"><b>roomMismatch 400</b> - Target's not in this room.</li>
+</ul>
 
 
 <h3><a id="rest-delete-booth-remove-1" href="#rest-delete-booth-remove-1">DELETE booth/remove/$1</a></h3>
-$1 - id of user to remove
+$1 - id of user to remove<br />
+403 (as user): {
+  "data": [
+    "Not a moderator in the room"
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 7.232189178466797
+}
 <b>TODO</b>
 
 
