@@ -26,6 +26,7 @@ h1, h2 {
 h3 {
     font-weight: 400;
     border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+    padding-bottom: 2px;
 }
 
 h4 {
@@ -145,6 +146,24 @@ i {
     font-style: normal;
     background-color: rgba(0, 0, 100, 0.06);
 }
+
+h3 .badge {
+    padding: 0px 6px;
+    background-color: rgba(200, 200, 200, 0.5);
+    font-size: 15px;
+}
+
+h3 .badge.notauthed, h3 .badge.unnameduser { /* Not authenticated, Unnamed user */
+    background-color: rgba(255, 60, 60, 0.5);
+}
+
+h3 .badge.isinroom, h3 .badge.role-rdj, h3 .badge.role-bouncer, h3 .badge.role-manager, h3 .badge.role-cohost, h3 .badge.host { /* Is in room, Resident DJ+, Bouncer+, Manager+, Co-Host+, Host */
+    background-color: rgba(60, 60, 255, 0.5);
+}
+
+h3 .badge.isdjing, h3 .badge.isinwaitlist { /* Is DJing, Is in wait list */
+    background-color: rgba(60, 200, 60, 0.5);
+}
 </style>
 </head>
 <body>
@@ -152,7 +171,7 @@ i {
 This document has been made to help other developers struggling with Plug's silly procotol. Maybe I'll write a bit more here later.
 
 <h1><a id="rest" href="#rest">REST API</a></h1>
-All requests to REST API require <i class="string">Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each requests URL starts with <i class="string">https://plug.dj/_/</i>. If the request contains any content it must have <i class="string">Content-Type</i> header set to <i class="string">application/json</i>.<br />
+All requests to REST API require <i class="string">Cookie</i> header to be sent with them with a session cookie containing a valid <a href="#rest-standard-session">session identifier</a>. Each request's URL starts with <i class="string">https://plug.dj/_/</i>. If the request contains any content it must have <b class="code">Content-Type</b> header set to <i class="string">application/json</i>.<br />
 If no Request payload, Request variables or Response payload section is defined, then such is empty or doesn't exist.
 
 <h2><a id="rest-standard" href="#rest-standard">Standard response elements</a></h2>
@@ -208,13 +227,12 @@ Below is the format used to describe different <b class="code">data</b> contents
 </ul>
 
 <h4><a id="rest-standard-session" href="#rest-standard-session">Session identificator</a></h4>
-Every response from Plug.dj contains a <i class="string">Set-Cookie</i> header containing <i class="string">session</i> cookie. After aquiring that session ID you should use it for every request you make to the REST API, otherwise it will treat you as unauthenticated.
+Every response from Plug.dj contains a <i class="string">Set-Cookie</i> header containing <i class="string">session</i> cookie. After acquiring that session ID you should use it for every request you make to the REST API, as it's what Plug.dj uses to tell that it's you.
 
 
 <h2><a id="rest-endpoints" href="#rest-endpoints">Endpoints</a></h2>
-<h3><a id="rest-post-auth-login" href="#rest-post-auth-login">POST auth/login</a></h3>
+<h3><a id="rest-post-auth-login" href="#rest-post-auth-login">POST auth/login</a> <span class="badge notauthed">Not authenticated</span></h3>
 Used for authenticating user using Plug.dj account.
-
 <h4><a id="rest-post-auth-login-request" href="#rest-post-auth-login-request">Request payload</a></h4>
 <ul class="jsondesc">
   <li class="object">Root object.
@@ -247,7 +265,7 @@ Used for authenticating user using Plug.dj account.
 </ul>
 
 
-<h3><a id="rest-post-auth-facebook" href="#rest-post-auth-facebook">POST auth/facebook</a></h3>
+<h3><a id="rest-post-auth-facebook" href="#rest-post-auth-facebook">POST auth/facebook</a> <span class="badge notauthed">Not authenticated</span></h3>
 Used for authenticating user using Facebook account.<br />
 <br />
 <b>TODO</b>
@@ -273,7 +291,15 @@ Returns an auth token used by WebSocket to authenticate to the server.
 <b>TODO</b>
 
 
-<h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a></h3>
+<h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a> <span class="badge notauthed">Not authenticated</span></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-get-users-validate-1" href="#rest-get-users-validate-1">GET users/validate/$1</a> <span class="badge unnameduser">Unnamed user</span></h3>
+<b>TODO</b>
+
+
+<h3><a id="rest-post-users" href="#rest-post-users">POST users</a> <span class="badge unnameduser">Unnamed user</span></h3>
 <b>TODO</b>
 
 
@@ -450,7 +476,8 @@ Used to change this user's blurb.
 
 
 <h3><a id="rest-post-rooms" href="#rest-post-rooms">POST rooms</a></h3>
-Used to create rooms.
+Used to create rooms.<br />
+<b>TODO: check what happens if your level is not high enough</b>
 <h4><a id="rest-post-rooms-request" href="#rest-post-rooms-request">Request payload</a></h4>
 <ul class="jsondesc">
   <li class="object">Root object.
@@ -502,7 +529,8 @@ Used to create rooms.
 
 
 <h3><a id="rest-get-rooms-validate-1" href="#rest-get-rooms-validate-1">GET rooms/validate/$1</a></h3>
-Used to check if room name enetered by user is a correct name for a room and if it's not already in use. Please note that leaving <b class="code">$1</b> empty results in http 404 response.
+Used to check if room name enetered by user is a correct name for a room and if it's not already in use. Please note that leaving <b class="code">$1</b> empty results in http 404 response.<br />
+<b>TODO: check what happens if your level is not high enough</b>
 <h4><a id="rest-rooms-validate-1-variables" href="#rest-rooms-validate-1-variables">Request variables</a></h4>
 <ul class="jsondesc">
   <li class="string"><b>$1</b> - Tested room name.</li>
@@ -523,25 +551,8 @@ Used to check if room name enetered by user is a correct name for a room and if 
 </ul>
 
 
-<h3><a id="rest-post-rooms-update" href="#rest-post-rooms-update">POST rooms/update</a></h3>
-requests:<br />
-{"name":"new rooms name"}<br />
-{"description":"new rooms description"}<br />
-{"welcome":"new rooms welcome message"}<br />
-<b>responses:</b><br />
-{"data": [], "meta": {}, "status": "ok", "time": 31.80098533630371}<br />
-{
-  "data": [
-    "At least 1 of these fields is required: name, description, welcome"
-  ], 
-  "meta": {}, 
-  "status": "requestError", 
-  "time": 2.9630661010742188
-} (400)<br />
-<br />
-Changing multiple at once possible.<br />
-<br />
-<b>TODO</b>
+<h3><a id="rest-post-rooms-update" href="#rest-post-rooms-update">POST rooms/update</a> <span class="badge isinroom">Is in room</span> <span class="badge role-cohost">Co-Host+</span></h3>
+Used to update rooms description, name and welcome message. At least one of the request fields has to be present.
 <h4><a id="rest-post-rooms-update-request" href="#rest-post-rooms-update-request">Request payload</a></h4>
 <ul class="jsondesc">
   <li class="object">Root object.
@@ -573,11 +584,11 @@ Changing multiple at once possible.<br />
 </ul>
 
 
-<h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a></h3>
+<h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a> <span class="badge isinroom">Is in room</span></h3>
 <b>TODO</b>
 
 
-<h3><a id="rest-get-rooms-history" href="#rest-get-rooms-history">GET rooms/history</a></h3>
+<h3><a id="rest-get-rooms-history" href="#rest-get-rooms-history">GET rooms/history</a> <span class="badge isinroom">Is in room</span></h3>
 <b>TODO</b>
 
 
@@ -585,10 +596,13 @@ Changing multiple at once possible.<br />
 Returns your rooms.<br />
 <br />
 <b>TODO</b>
+<b>TODO: check what happens if you dont have high enough level</b>
 
 
 <h3><a id="rest-post-rooms-join" href="#rest-post-rooms-join">POST rooms/join</a></h3>
 <b>TODO</b>
+
+
 <h3><a id="rest-post-rooms-favorites" href="#rest-post-rooms-favorites">POST rooms/favorites</a></h3>
 <b>TODO</b>
 
@@ -597,7 +611,7 @@ Returns your rooms.<br />
 <b>TODO</b>
 
 
-<h3><a id="rest-post-votes" href="#rest-post-votes">POST votes</a></h3>
+<h3><a id="rest-post-votes" href="#rest-post-votes">POST votes</a> <span class="badge isinroom">Is in room</span></h3>
 Used to vote for the currently played song. If the <b class="code">historyID</b> value doesn't match the one of currently played song's or there is no song playing at the moment then the vote doesn't count, but the response code is still <b class="code">ok 200</b>. It is possible to vote when this user is DJing.<br />
 <h4><a id="rest-post-votes-request" href="#rest-post-votes-request">Request payload</a></h4>
 <ul class="jsondesc">
@@ -625,7 +639,7 @@ Used to vote for the currently played song. If the <b class="code">historyID</b>
 </ul>
 
 
-<h3><a id="rest-post-grabs" href="#rest-post-grabs">POST grabs</a></h3>
+<h3><a id="rest-post-grabs" href="#rest-post-grabs">POST grabs</a> <span class="badge isinroom">Is in room</span></h3>
 Used to grab currently played song.
 <h4><a id="rest-post-grabs-request" href="#rest-post-grabs-request">Request payload</a></h4>
 <ul class="jsondesc">
@@ -659,23 +673,23 @@ Used to grab currently played song.
 </ul>
 
 
-<h3><a id="rest-get-booth" href="#rest-get-booth">GET booth</a></h3>
+<h3><a id="rest-get-booth" href="#rest-get-booth">GET booth</a> <span class="badge isinroom">Is in room</span></h3>
 <b>TODO</b>
 
 
-<h3><a id="rest-post-booth" href="#rest-post-booth">POST booth</a></h3>
+<h3><a id="rest-post-booth" href="#rest-post-booth">POST booth</a> <span class="badge isinroom">Is in room</span></h3>
 Add yourself to waitlist.<br />
 <br />
 <b>TODO</b>
 
 
-<h3><a id="rest-delete-booth" href="#rest-delete-booth">DELETE booth</a></h3>
+<h3><a id="rest-delete-booth" href="#rest-delete-booth">DELETE booth</a> <span class="badge isinroom">Is in room</span></h3>
 Quit DJing.<br />
 <br />
 <b>TODO</b>
 
 
-<h3><a id="rest-post-booth-add" href="#rest-post-booth-add">POST booth/add</a></h3>
+<h3><a id="rest-post-booth-add" href="#rest-post-booth-add">POST booth/add</a> <span class="badge isinroom">Is in room</span> <span class="badge role-bouncer">Bouncer+</span></h3>
 Used to add other users to the wait list.
 <h4><a id="rest-post-booth-add-request" href="#rest-post-booth-add-request">Request payload</a></h4>
 <ul class="jsondesc">
@@ -702,7 +716,7 @@ Used to add other users to the wait list.
 </ul>
 
 
-<h3><a id="rest-delete-booth-remove-1" href="#rest-delete-booth-remove-1">DELETE booth/remove/$1</a></h3>
+<h3><a id="rest-delete-booth-remove-1" href="#rest-delete-booth-remove-1">DELETE booth/remove/$1</a> <span class="badge isinroom">Is in room</span></h3>
 $1 - id of user to remove<br />
 403 (as user): {
   "data": [
@@ -713,21 +727,24 @@ $1 - id of user to remove<br />
   "time": 7.232189178466797
 }
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-post-booth-move" href="#rest-post-booth-move">POST booth/move</a></h3>
+<h3><a id="rest-post-booth-move" href="#rest-post-booth-move">POST booth/move</a> <span class="badge isinroom">Is in room</span></h3>
+<b>TODO</b>
+<b>TODO: add role badge</b>
+
+
+<h3><a id="rest-post-booth-skip" href="#rest-post-booth-skip">POST booth/skip</a> <span class="badge isinroom">Is in room</span></h3>
+<b>TODO</b>
+<b>TODO: add role badge</b>
+
+
+<h3><a id="rest-post-booth-skip-me" href="#rest-post-booth-skip-me">POST booth/skip/me</a> <span class="badge isinroom">Is in room</span> <span class="badge isdjing">Is DJing</span></h3>
 <b>TODO</b>
 
 
-<h3><a id="rest-post-booth-skip" href="#rest-post-booth-skip">POST booth/skip</a></h3>
-<b>TODO</b>
-
-
-<h3><a id="rest-delete-booth-skip-me" href="#rest-delete-booth-skip-me">DELETE booth/skip/me</a></h3>
-<b>TODO</b>
-
-
-<h3><a id="rest-put-booth-lock" href="#rest-put-booth-lock">PUT booth/lock</a></h3>
+<h3><a id="rest-put-booth-lock" href="#rest-put-booth-lock">PUT booth/lock</a> <span class="badge isinroom">Is in room</span></h3>
 {"isLocked":true,"removeAllDJs":false}<br />
 <h4><a id="rest-put-booth-lock-request">Request payload</a></h4>
 <ul class="jsondesc">
@@ -739,25 +756,28 @@ $1 - id of user to remove<br />
   </li>
 </ul>
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-put-booth-cycle" href="#rest-put-booth-cycle">PUT booth/cycle</a></h3>
+<h3><a id="rest-put-booth-cycle" href="#rest-put-booth-cycle">PUT booth/cycle</a> <span class="badge isinroom">Is in room</span></h3>
 {"shouldCycle":false}<br />
 <br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-delete-chat-1" href="#rest-delete-chat-1">DELETE chat/$1</a></h3>
+<h3><a id="rest-delete-chat-1" href="#rest-delete-chat-1">DELETE chat/$1</a> <span class="badge isinroom">Is in room</span></h3>
 $1 - message id
 <b>TODO</b>
 
 
-<h3><a id="rest-get-mutes" href="#rest-get-mutes">GET mutes</a></h3>
+<h3><a id="rest-get-mutes" href="#rest-get-mutes">GET mutes</a> <span class="badge isinroom">Is in room</span></h3>
 {"data": [{"expires": 897, "id": 4231080, "moderator": "opl", "reason": 3, "username": "Tom The Boulder"}], "meta": {}, "status": "ok", "time": 14.811992645263672}<br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-post-mutes" href="#rest-post-mutes">POST mutes</a></h3>
+<h3><a id="rest-post-mutes" href="#rest-post-mutes">POST mutes</a> <span class="badge isinroom">Is in room</span></h3>
 request: {"userID":5334480,"reason":3,"duration":"s (15 mins), m (30 mins), l (45mins)"}<br />
 
 response (invalid duration): {
@@ -770,18 +790,21 @@ response (invalid duration): {
 } (400)<br />
 doesnt validate reason
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-delete-mutes-1" href="#rest-delete-mutes-1">DELETE mutes/$1</a></h3>
+<h3><a id="rest-delete-mutes-1" href="#rest-delete-mutes-1">DELETE mutes/$1</a> <span class="badge isinroom">Is in room</span></h3>
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-get-bans" href="#rest-get-bans">GET bans</a></h3>
+<h3><a id="rest-get-bans" href="#rest-get-bans">GET bans</a> <span class="badge isinroom">Is in room</span></h3>
 {"data": [{"duration": "h", "id": 4231080, "moderator": "opl", "reason": 1, "timestamp": "2014-10-28 17:39:53.431437", "username": "Tom The Boulder"}], "meta": {}, "status": "ok", "time": 12.476921081542969}<br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-post-bans-add" href="#rest-post-bans-add">POST bans/add</a></h3>
+<h3><a id="rest-post-bans-add" href="#rest-post-bans-add">POST bans/add</a> <span class="badge isinroom">Is in room</span></h3>
 <b>request</b>: {"userID":5334480,"reason":5,"duration":"h (hour), d (day), f (forever)"}<br />
 <b>response on banning yourself (400)</b>: {
   "data": [
@@ -800,9 +823,10 @@ response on trying to ban higher ranked user: {
   "time": 20.30801773071289
 }<br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-delete-bans-1" href="#rest-delete-bans-1">DELETE bans/$1</a></h3>
+<h3><a id="rest-delete-bans-1" href="#rest-delete-bans-1">DELETE bans/$1</a> <span class="badge isinroom">Is in room</span></h3>
 not banned: {
   "data": [], 
   "meta": {}, 
@@ -812,17 +836,18 @@ not banned: {
 <b>TODO</b>
 
 
-<h3><a id="rest-get-staff" href="#rest-get-staff">GET staff</a></h3>
+<h3><a id="rest-get-staff" href="#rest-get-staff">GET staff</a> <span class="badge isinroom">Is in room</span></h3>
 {"data": [{"avatarID": "rock14", "id": 4489709, "joined": "2014-06-06 20:58:00.513000", "level": 9, "role": 5, "username": "opl"}, {"avatarID": "base05", "id": 5334480, "joined": "2014-10-25 15:49:31.752502", "level": 4, "role": 2, "username": "nejey"}], "meta": {}, "status": "ok", "time": 33.9350700378418}<br />
 <b>TODO</b>
 
 
-<h3><a id="rest-post-staff-update" href="#rest-post-staff-update">POST staff/update</a></h3>
+<h3><a id="rest-post-staff-update" href="#rest-post-staff-update">POST staff/update</a> <span class="badge isinroom">Is in room</span></h3>
 request: {"userID":5334480,"roleID":1}<br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
-<h3><a id="rest-delete-staff-1" href="#rest-delete-staff-1">DELETE staff/$1</a></h3>
+<h3><a id="rest-delete-staff-1" href="#rest-delete-staff-1">DELETE staff/$1</a> <span class="badge isinroom">Is in room</span></h3>
 response (not staff): {
   "data": [], 
   "meta": {}, 
@@ -830,6 +855,7 @@ response (not staff): {
   "time": 31.175851821899414
 } (404)<br />
 <b>TODO</b>
+<b>TODO: add role badge</b>
 
 
 <h3><a id="rest-get-playlists" href="#rest-get-playlists">GET playlists</a></h3>
