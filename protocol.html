@@ -176,12 +176,13 @@ If no Request payload, Request variables or Response payload section is defined,
 
 <h2><a id="rest-standard" href="#rest-standard">Standard response elements</a></h2>
 <h4><a id="rest-standard-response-codes" href="#rest-standard-response-codes">Standard response codes</a></h4>
-These are the response statuses alone with their respective HTTP response codes that you can recieve from all endpoints.
+These are the response statuses alone with their respective HTTP response codes that you can receive from all endpoints.
 <ul class="jsondesc">
   <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
   <li class="string"><b>notAuthorized 401</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
   <li class="string"><b>*html 400 page* 400</b> - Invalid or empty http request payload.</li>
   <li class="string"><b>500 500</b> - Invalid or empty http request payload. Please note that the <b class="code">status</b> field is an integer in this case.</li>
+  <li class="string"><b>*empty payload* 503</b> - Plug.dj is down. Expect this to happen <strike>from time to time</strike> constantly.</li>
   <li class="string"><b>TODO</b> - Write more about those if any more of them exists.</li>
 </ul>
 
@@ -369,6 +370,39 @@ Returns all data about this user.
   }, ...
 ], "meta": {}, "status": "ok", "time": 2.4499893188476562} -->
 <b>TODO</b>
+<b>TODO: check what happens if you never played any songs</b>
+<h4><a id="rest-put-users-avatar-response" href="#rest-put-users-avatar-response">Response payload</a></h4>
+<b>TODO: rephrase some of that?</b>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b> - Array containing at most last 50 songs played by this user.
+    <ul>
+      <li class="string"><b>id</b> - Song's history ID.</li>
+      <li class="object"><b>media</b> - Song's <a href="#std-objs-media">media</a> object.</li>
+      <li class="object"><b>room</b> - Room song was played in.
+        <ul>
+          <li class="string"><b>name</b> - Room's name.</li>
+          <li class="string"><b>slug</b> - Room's slug.</li>
+        </ul>
+      </li>
+      <li class="object"><b>score</b> - Song's rating after that play.
+        <ul>
+          <li class="integer"><b>grabs</b> - Amount of grabs song received.</li>
+          <li class="integer"><b>listeners</b> - Amount of users in the room when the song was played.</li>
+          <li class="integer"><b>negative</b> - Amount of mehs song received.</li>
+          <li class="integer"><b>positive</b> - Amount of woots song received.</li>
+          <li class="integer"><b>skipped</b> - <b>TODO</b></li>
+        </ul>
+      </li>
+      <li class="string"><b>timestamp</b> - <a href="#std-vars-date">Date</a> when this song started playing.</li>
+      <li class="object"><b>user</b> - User who played this song. Always this user.
+        <ul>
+          <li class="integer"><b>id</b> - This user's ID.</li>
+          <li class="string"><b>name</b> - This user's username.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-post-users-bulk" href="#rest-post-users-bulk">POST users/bulk</a></h3>
@@ -1035,7 +1069,7 @@ when user id invald: {
 
 
 <h1><a id="sock" href="#sock">WebSocket protocol</a></h1>
-<b>TODO</b>: describe frame payload
+<b>TODO: describe frame payload/link some sockjs protocol reference</b>
 
 
 <h2><a id="sock-in" href="#sock-in">Incoming messages</a></h2>
@@ -1267,6 +1301,7 @@ Sent when room's name changes.
 
 
 <h2><a id="out" href="#out">Outgoing messages</a></h2>
+<b>TODO</b>
 
 
 
