@@ -147,9 +147,12 @@ i {
     background-color: rgba(0, 0, 100, 0.06);
 }
 
-h3 .badge {
+.badge {
     padding: 0px 6px;
     background-color: rgba(200, 200, 200, 0.5);
+}
+
+h3 .badge {
     font-size: 15px;
 }
 
@@ -180,6 +183,7 @@ These are the response statuses alone with their respective HTTP response codes 
 <ul class="jsondesc">
   <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
   <li class="string"><b>notAuthorized 401</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
+  <li class="string"><b>notAuthorized 401</b> - Returned from all endpoints but the ones marked <span class="badge unnameduser">Unnamed user</span> if this user is logged in but doesn't have a name yet.</li>
   <li class="string"><b>*html 400 page* 400</b> - Invalid or empty http request payload.</li>
   <li class="string"><b>500 500</b> - Invalid or empty http request payload. Please note that the <b class="code">status</b> field is an integer in this case.</li>
   <li class="string"><b>*empty payload* 503</b> - Plug.dj is down. Expect this to happen <strike>from time to time</strike> constantly.</li>
@@ -293,14 +297,96 @@ Returns an auth token used by WebSocket to authenticate to the server.
 
 
 <h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a> <span class="badge notauthed">Not authenticated</span></h3>
+request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"03AHJ_VuuCu3cYCj8h7Yr7CZj_r6Vm_5VKYqAcyenPvasYUt3mY1RkpfuOpM9H8zwjrXNWGbyXnJLZxUvauTAnf30oSC2NiVaAENi4mkpoCgw_EuTNrPmULXhnhyjsy1aY_teBvMChReoeGeBcW9qSXQ0-Hp58S0G8YKxq1ofXC4MdlKghZAJwdgaSX2ZxOu1QTfMS1BtJiRbdklH0wrefEc6etWiHMhc4ykVYULxG5qZfK8U34JriQWDQQMlq44pFZxrcgn3UCLjz5ngR64OHYaqqV1gCYJKITE4s5uBKpDtT1nzJfw6VvGalh-KMtvMAJvDMj5o57UPt","response":"168"}<br />
+ok 200: {"data": [{"avatarID": null, "badge": 0, "blurb": null, "gRole": 0, "id": 5573564, "joined": "2014-12-02 17:04:33.804045", "level": 1, "slug": null, "status": 0, "username": null}], "meta": {}, "status": "ok", "time": 314.29505348205566}
 <b>TODO</b>
 
 
 <h3><a id="rest-get-users-validate-1" href="#rest-get-users-validate-1">GET users/validate/$1</a> <span class="badge unnameduser">Unnamed user</span></h3>
+request vars: $1 username to test<br />
+ok 200: {"data": [{"slug": "users-slug"}], "meta": {}, "status": "ok", "time": 9.778976440429688}<br />
+ok 403 (too short (one char), in use or contains illegal chars like @): {"data": [], "meta": {}, "status": "ok", "time": 5.145072937011719}
+requestError 400 (more than 24 chars): {
+  "data": [
+    {
+      "username": [
+        "usernameLong"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 8.69297981262207
+}
 <b>TODO</b>
 
 
 <h3><a id="rest-post-users" href="#rest-post-users">POST users</a> <span class="badge unnameduser">Unnamed user</span></h3>
+request: {"avatarID": "base??", "username": "username"}
+ok 200: {"data": [{"avatarID": "base14", "badge": 0, "blurb": null, "gRole": 0, "id": id, "joined": "timestamp", "level": 1, "slug": "slug", "status": 0, "username": "username"}], "meta": {}, "status": "ok", "time": 51.74088478088379}<br />
+requestError 400 (both missing): {
+  "data": [
+    {
+      "avatarID": [
+        "avatarIDInvalid"
+      ],
+      "username": [
+        "usernameShort"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 1.1870861053466797
+}<br />
+requestError 400: {
+  "data": [
+    {
+      "username": [
+        "usernameShort"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 1.2798309326171875
+}<br />
+requestError 400 (no avatarID field or invalid): {
+  "data": [
+    {
+      "avatarID": [
+        "avatarIDInvalid"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 1.5900135040283203
+}<br />
+requestError 400 (missing avatarID, too long username): {
+  "data": [
+    {
+      "avatarID": [
+        "avatarIDInvalid"
+      ],
+      "username": [
+        "usernameLong"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 2.0551681518554688
+}<br />
+alreadySignedUp 403: {
+  "data": [
+    "This request was understood but is forbidden."
+  ],
+  "meta": {},
+  "status": "alreadySignedUp",
+  "time": 1.6248226165771484
+}
+
 <b>TODO</b>
 
 
@@ -358,6 +444,7 @@ Returns all data about this user.
 
 
 <h3><a id="rest-get-users-me-history" href="#rest-get-users-me-history">GET users/me/history</a></h3>
+Returns at most last 50 songs played by this user.
 <!--
 {"data": [
   {
@@ -370,7 +457,7 @@ Returns all data about this user.
   }, ...
 ], "meta": {}, "status": "ok", "time": 2.4499893188476562} -->
 <b>TODO</b>
-<b>TODO: check what happens if you never played any songs</b>
+<b>TODO: check what happens if you never played any songs (empty data array?)</b>
 <h4><a id="rest-put-users-avatar-response" href="#rest-put-users-avatar-response">Response payload</a></h4>
 <b>TODO: rephrase some of that?</b>
 <ul class="jsondesc">
@@ -1073,6 +1160,34 @@ when user id invald: {
 
 
 <h2><a id="sock-in" href="#sock-in">Incoming messages</a></h2>
+<h3><a id="sock-in-ack" href="#sock-in-ack">ack</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-advance" href="#sock-in-advance">advance</a></h3>
+Sent when a new media is played. The object is empty if there's no DJ.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>c</b> - Current DJ's user ID.</li>
+      <li class="array"><b>d</b> - Array of user IDs of users in wait list.</li>
+      <li class="string"><b>h</b> - Unknown.</li>
+      <li class="object"><b>m</b> - Current <a href="#std-objs-media">media</a>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-ban" href="#sock-in-ban">ban</a></h3>
+Sent when this user gets banned from the community.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>r</b> - Ban reason ID. Range: <i class="integer">1</i>-<i class="integer">5</i> This value may be out of range.</li>
+      <li class="string"><b>t</b> - Unknown. <i class="string">ban</i> <b>TODO: investigate on this one</b></li>
+      <li class="string"><b>d</b> - Ban duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+    </ul>
+  </li>
+</ul>
+
 <h3><a id="sock-in-chat" href="#sock-in-chat">chat</a></h3>
 Sent whenever a new chat message is sent by any user, including this user.
 <ul class="jsondesc">
@@ -1098,6 +1213,40 @@ Sent when a chat message gets deleted.
   </li>
 </ul>
 
+<h3><a id="sock-in-djlistcycle" href="#sock-in-djlistcycle">djListCycle</a></h3>
+Sent when wait list cycle gets enabled or disabled.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>u</b> - Toggling user's ID.</li>
+      <li class="string"><b>t</b> - Toggling user's username.</li>
+      <li class="boolean"><b>f</b> - Wait list cycle state. <i class="boolean">true</i> if enabled, <i class="boolean">false</i> otherwise.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-djlistlocked" href="#sock-in-djlistlocked">djListLocked</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-djlistupdate" href="#sock-in-djlistupdate">djListUpdate</a></h3>
+Sent when the wait list gets updated.
+<ul class="jsondesc">
+  <li class="array"><b>p</b> - Array of user IDs of users in wait list.</li>
+</ul>
+
+<h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
+Sent when some users data changes. Plug.dj's code doesn't remove any fields from this message except for <b class="code">id</b> and just appends them to that users object, which means that in theory it can update any data of that user. The only fields that appear in this message at once are <b class="code">id</b> and one other field from below.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
+      <li class="integer"><b>level</b> - That users new experience level.</li>
+      <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
+      <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
+    </ul>
+  </li>
+</ul>
+
 <h3><a id="sock-in-earn" href="#sock-in-earn">earn</a></h3>
 Sent every 5 minutes to update this users experience points and Plug Points. This message is also used by Plug.dj to show level up dialogs.
 <ul class="jsondesc">
@@ -1110,11 +1259,102 @@ Sent every 5 minutes to update this users experience points and Plug Points. Thi
   </li>
 </ul>
 
+<h3><a id="sock-in-floodchat" href="#sock-in-floodchat">floodChat</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-friendrequest" href="#sock-in-friendrequest">friendRequest</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-friendAccept" href="#sock-in-friendAccept">friendAccept</a></h3>
+<b>TODO</b>
+
 <h3><a id="sock-in-grab" href="#sock-in-grab">grab</a></h3>
 Sent when some user grabs currently played song.
 <ul class="jsondesc">
   <li class="integer"><b>p</b> - Grabbing user's ID.</li>
 </ul>
+
+<h3><a id="sock-in-killsession" href="#sock-in-killsession">killSession</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-modadddj" href="#sock-in-modadddj">modAddDJ</a></h3>
+Sent when a user gets added to wait list.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>m</b> - Adding user's username.</li>
+      <li class="string"><b>t</b> - Added user's username.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-modban" href="#sock-in-modban">modBan</a></h3>
+Sent when a user gets banned.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>u</b> - Banned user's ID.</li>
+      <li class="string"><b>m</b> - Banning user's username.</li>
+      <li class="string"><b>t</b> - Banned user's username.</li>
+      <li class="string"><b>d</b> - Duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-modmovedj" href="#sock-in-modmovedj">modMoveDJ</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-modmute" href="#sock-in-modmute">modMute</a></h3>
+Sent when some user gets muted.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="integer"><b>id</b> - Muted users ID.</li>
+      <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
+      <li class="string"><b>m</b> - Muting user's username.</li>
+      <li class="string"><b>t</b> - Muted user's username.</li>
+      <li class="string"><b>d</b> - Duration. <i class="string">l</i> if long (45 minutes), <i class="string">m</i> if medium (30 minutes), <i class="string">s</i> if short (15 minutes) or <i class="string">o</i> if unmute.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-modremovedj" href="#sock-in-modremovedj">modRemoveDJ</a></h3>
+Sent when a user gets removed from wait list.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="string"><b>m</b> - Removing user's username.</li>
+      <li class="string"><b>t</b> - Removed user's username.</li>
+      <li class="boolean"><b>d</b> - Unknown.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-modskip" href="#sock-in-modskip">modSkip</a></h3>
+Sent when current DJ gets skipped by a staff member.
+<ul class="jsondesc">
+  <li class="string"><b>p</b> - Skipping users name.</li>
+</ul>
+
+<h3><a id="sock-in-modstaff" href="#sock-in-modstaff">modStaff</a></h3>
+Sent when user's role changes.
+<ul class="jsondesc">
+  <li class="object"><b>p</b>
+    <ul>
+      <li class="object"><b>u</b> - Promoted user's data.
+        <ul>
+          <li class="integer"><b>i</b> - Promoted user's ID.</li>
+          <li class="integer"><b>p</b> - Promoted user's new <a href="#std-vars-role">role</a>.</li>
+          <li class="string"><b>n</b> - Promoted user's username.</li>
+        </ul>
+      </li>
+      <li class="string"><b>m</b> - Promoting user's username.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3><a id="sock-in-namechanged" href="#sock-in-namechanged">nameChanged</a></h3>
+<b>TODO</b>
 
 <h3><a id="sock-in-vote" href="#sock-in-vote">vote</a></h3>
 Sent when some user woots or mehs currently played song.
@@ -1127,17 +1367,45 @@ Sent when some user woots or mehs currently played song.
   </li>
 </ul>
 
-<h3><a id="sock-in-advance" href="#sock-in-advance">advance</a></h3>
-Sent when a new media is played. The object is empty if there's no DJ.
+<h3><a id="sock-in-notify" href="#sock-in-notify">notify</a></h3>
+Sent when this user receives new notification.
+<ul class="jsondesc">
+  <li class="object"><b>p</b> - See standard <a href="#std-objs-notification">notification</a> object for the format.</li>
+</ul>
+
+<h3><a id="sock-in-playlistcycle" href="#sock-in-playlistcycle">playlistCycle</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-plugmaintenance" href="#sock-in-plugmaintenance">plugMaintenance</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-plugmessage" href="#sock-in-plugmessage">plugMessage</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-plugupdate" href="#sock-in-plugupdate">plugUpdate</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-ratelimit" href="#sock-in-ratelimit">rateLimit</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-roomnameupdate" href="#sock-in-roomnameupdate">roomNameUpdate</a></h3>
+Sent when room's name changes.
 <ul class="jsondesc">
   <li class="object"><b>p</b>
     <ul>
-      <li class="integer"><b>c</b> - Current DJ's user ID.</li>
-      <li class="array"><b>d</b> - Array of user IDs of users in wait list.</li>
-      <li class="string"><b>h</b> - Unknown.</li>
-      <li class="object"><b>m</b> - Current <a href="#std-objs-media">media</a>.</li>
+      <li class="string"><b>u</b> - Changing user's username.</li>
+      <li class="string"><b>n</b> - Room's new name.</li>
     </ul>
   </li>
+</ul>
+
+<h3><a id="sock-in-roomdescriptionupdate" href="#sock-in-roomdescriptionupdate">roomDescriptionUpdate</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-skip" href="#sock-in-skip">skip</a></h3>
+Sent when the current DJ decides to skip his song.
+<ul class="jsondesc">
+  <li class="string"><b>p</b> - Current DJ's username.</li>
 </ul>
 
 <h3><a id="sock-in-userjoin" href="#sock-in-userjoin">userJoin</a></h3>
@@ -1166,138 +1434,11 @@ Sent when a user leaves.
   <li class="integer"><b>p</b> - Leaving users ID.</li>
 </ul>
 
-<h3><a id="sock-in-djlistupdate" href="#sock-in-djlistupdate">djListUpdate</a></h3>
-Sent when the wait list gets updated.
-<ul class="jsondesc">
-  <li class="array"><b>p</b> - Array of user IDs of users in wait list.</li>
-</ul>
-
 <h3><a id="sock-in-userupdate" href="#sock-in-userupdate">userUpdate</a></h3>
-Sent when some users data changes. Plug.dj's code doesn't remove any fields from this message except for <b class="code">id</b> and just appends them to that users object, which means that in theory it can update any data of that user. The only fields that appear in this message at once are <b class="code">id</b> and one other field from below.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
-      <li class="integer"><b>level</b> - That users new experience level.</li>
-      <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
-      <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
-    </ul>
-  </li>
-</ul>
+<b>TODO</b>
 
-<h3><a id="sock-in-ban" href="#sock-in-ban">ban</a></h3>
-Sent when this user gets banned from the community.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="integer"><b>r</b> - Ban reason ID. Range: <i class="integer">1</i>-<i class="integer">5</i> This value may be out of range.</li>
-      <li class="string"><b>t</b> - Unknown. <i class="string">ban</i> <b>TODO: investigate on this one</b></li>
-      <li class="string"><b>d</b> - Ban duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-modmute" href="#sock-in-modmute">modMute</a></h3>
-Sent when some user gets muted.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="integer"><b>id</b> - Muted users ID.</li>
-      <li class="integer"><b>r</b> - Reason ID for this mute. Range: <i class="integer">1</i>-<i class="integer">5</i>. May go out of range.</li>
-      <li class="string"><b>m</b> - Muting user's username.</li>
-      <li class="string"><b>t</b> - Muted user's username.</li>
-      <li class="string"><b>d</b> - Duration. <i class="string">l</i> if long (45 minutes), <i class="string">m</i> if medium (30 minutes), <i class="string">s</i> if short (15 minutes) or <i class="string">o</i> if unmute.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-skip" href="#sock-in-skip">skip</a></h3>
-Sent when the current DJ decides to skip his song.
-<ul class="jsondesc">
-  <li class="string"><b>p</b> - Current DJ's username.</li>
-</ul>
-
-<h3><a id="sock-in-modskip" href="#sock-in-modskip">modSkip</a></h3>
-Sent when current DJ gets skipped by a staff member.
-<ul class="jsondesc">
-  <li class="string"><b>p</b> - Skipping users name.</li>
-</ul>
-
-<h3><a id="sock-in-modban" href="#sock-in-modban">modBan</a></h3>
-Sent when a user gets banned.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="integer"><b>u</b> - Banned user's ID.</li>
-      <li class="string"><b>m</b> - Banning user's username.</li>
-      <li class="string"><b>t</b> - Banned user's username.</li>
-      <li class="string"><b>d</b> - Duration. <i class="string">h</i> if hour, <i class="string">d</i> if day or <i class="string">f</i> if forever.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-modstaff" href="#sock-in-modstaff">modStaff</a></h3>
-Sent when user's role changes.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="object"><b>u</b> - Promoted user's data.
-        <ul>
-          <li class="integer"><b>i</b> - Promoted user's ID.</li>
-          <li class="integer"><b>p</b> - Promoted user's new <a href="#std-vars-role">role</a>.</li>
-          <li class="string"><b>n</b> - Promoted user's username.</li>
-        </ul>
-      </li>
-      <li class="string"><b>m</b> - Promoting user's username.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-modadddj" href="#sock-in-modadddj">modAddDJ</a></h3>
-Sent when a user gets added to wait list.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="string"><b>m</b> - Adding user's username.</li>
-      <li class="string"><b>t</b> - Added user's username.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-modremovedj" href="#sock-in-modremovedj">modRemoveDJ</a></h3>
-Sent when a user gets removed from wait list.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="string"><b>m</b> - Removing user's username.</li>
-      <li class="string"><b>t</b> - Removed user's username.</li>
-      <li class="boolean"><b>d</b> - Unknown.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-djlistcycle" href="#sock-in-djlistcycle">djListCycle</a></h3>
-Sent when wait list cycle gets enabled or disabled.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="integer"><b>u</b> - Toggling user's ID.</li>
-      <li class="string"><b>t</b> - Toggling user's username.</li>
-      <li class="boolean"><b>f</b> - Wait list cycle state. <i class="boolean">true</i> if enabled, <i class="boolean">false</i> otherwise.</li>
-    </ul>
-  </li>
-</ul>
-
-<h3><a id="sock-in-roomnameupdate" href="#sock-in-roomnameupdate">roomNameUpdate</a></h3>
-Sent when room's name changes.
-<ul class="jsondesc">
-  <li class="object"><b>p</b>
-    <ul>
-      <li class="string"><b>u</b> - Changing user's username.</li>
-      <li class="string"><b>n</b> - Room's new name.</li>
-    </ul>
-  </li>
-</ul>
+<h3><a id="sock-in-vote" href="#sock-in-vote">vote</a></h3>
+<b>TODO</b>
 
 
 <h2><a id="out" href="#out">Outgoing messages</a></h2>
@@ -1417,6 +1558,45 @@ Notification values for different notification types:
 
 </body>
 </html>
+
+<!--
+ack
+advance
+ban
+chat
+chatDelete
+djListCycle
+djListLocked
+djListUpdate
+earn
+floodChat
+friendRequest
+friendAccept
+grab
+killSession
+modAddDJ
+modBan
+modMoveDJ
+modMute
+modRemoveDJ
+modSkip
+modStaff
+nameChanged
+notify
+playlistCycle
+plugMaintenance
+plugMessage
+plugUpdate
+rateLimit
+roomNameUpdate
+roomDescriptionUpdate
+roomWelcomeUpdate
+skip
+userJoin
+userLeave
+userUpdate
+vote
+-->
 
 <!--
 chatDelete				v	{"c":"message id","u":userid}
