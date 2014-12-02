@@ -156,15 +156,15 @@ h3 .badge {
     font-size: 15px;
 }
 
-h3 .badge.notauthed, h3 .badge.unnameduser { /* Not authenticated, Unnamed user */
+.badge.notauthed, .badge.unnameduser { /* Not authenticated, Unnamed user */
     background-color: rgba(255, 60, 60, 0.5);
 }
 
-h3 .badge.isinroom, h3 .badge.role-rdj, h3 .badge.role-bouncer, h3 .badge.role-manager, h3 .badge.role-cohost, h3 .badge.host { /* Is in room, Resident DJ+, Bouncer+, Manager+, Co-Host+, Host */
+.badge.isinroom, .badge.role-rdj, .badge.role-bouncer, .badge.role-manager, .badge.role-cohost, .badge.host { /* Is in room, Resident DJ+, Bouncer+, Manager+, Co-Host+, Host */
     background-color: rgba(60, 60, 255, 0.5);
 }
 
-h3 .badge.isdjing, h3 .badge.isinwaitlist { /* Is DJing, Is in wait list */
+.badge.isdjing, .badge.isinwaitlist { /* Is DJing, Is in wait list */
     background-color: rgba(60, 200, 60, 0.5);
 }
 </style>
@@ -297,7 +297,7 @@ Returns an auth token used by WebSocket to authenticate to the server.
 
 
 <h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a> <span class="badge notauthed">Not authenticated</span></h3>
-request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"03AHJ_VuuCu3cYCj8h7Yr7CZj_r6Vm_5VKYqAcyenPvasYUt3mY1RkpfuOpM9H8zwjrXNWGbyXnJLZxUvauTAnf30oSC2NiVaAENi4mkpoCgw_EuTNrPmULXhnhyjsy1aY_teBvMChReoeGeBcW9qSXQ0-Hp58S0G8YKxq1ofXC4MdlKghZAJwdgaSX2ZxOu1QTfMS1BtJiRbdklH0wrefEc6etWiHMhc4ykVYULxG5qZfK8U34JriQWDQQMlq44pFZxrcgn3UCLjz5ngR64OHYaqqV1gCYJKITE4s5uBKpDtT1nzJfw6VvGalh-KMtvMAJvDMj5o57UPt","response":"168"}<br />
+request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"03AHJ_VuuCu3cYCj8h7Yr7CZj_r6Vm_5VKYqAcyenPvasYUt3mY1RkpfuOpM9H8zwjrXNWGbyXnJLZxUvauTAnf30oSC2NiVaAENi4mkpoCgw_EuTNrPmULXhnhyjsy1aY_teBvMChReoeGeBcW9qSXQ0-Hp58S0G8YKxq1ofXC4MdlKghZAJwdgaSX2ZxOu1QTfMS1BtJiRbdklH0wrefEc6etWiHMhc4ykVYULxG5qZfK8U34JriQWDQQMlq44pFZxrcgn3UCLjz5ngR64OHYaqqV1gCYJKITE4s5uBKpDtT1nzJfw6VvGalh-KMtvMAJvDMj5o57UPt","response":"captcha"}<br />
 ok 200: {"data": [{"avatarID": null, "badge": 0, "blurb": null, "gRole": 0, "id": 5573564, "joined": "2014-12-02 17:04:33.804045", "level": 1, "slug": null, "status": 0, "username": null}], "meta": {}, "status": "ok", "time": 314.29505348205566}
 <b>TODO</b>
 
@@ -305,7 +305,7 @@ ok 200: {"data": [{"avatarID": null, "badge": 0, "blurb": null, "gRole": 0, "id"
 <h3><a id="rest-get-users-validate-1" href="#rest-get-users-validate-1">GET users/validate/$1</a> <span class="badge unnameduser">Unnamed user</span></h3>
 request vars: $1 username to test<br />
 ok 200: {"data": [{"slug": "users-slug"}], "meta": {}, "status": "ok", "time": 9.778976440429688}<br />
-ok 403 (too short (one char), in use or contains illegal chars like @): {"data": [], "meta": {}, "status": "ok", "time": 5.145072937011719}
+ok 403 (too short (one char), in use or contains illegal chars like @(?)): {"data": [], "meta": {}, "status": "ok", "time": 5.145072937011719}
 requestError 400 (more than 24 chars): {
   "data": [
     {
