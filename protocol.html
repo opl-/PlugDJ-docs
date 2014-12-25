@@ -300,7 +300,7 @@ Returns an auth token used by WebSocket to authenticate to the server.
 
 <h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a> <span class="badge notauthed">Not authenticated</span></h3>
 request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"long challenge thingy","response":"captcha"}<br />
-ok 200: {"data": [{"avatarID": null, "badge": 0, "blurb": null, "gRole": 0, "id": 5573564, "joined": "2014-12-02 17:04:33.804045", "level": 1, "slug": null, "status": 0, "username": null}], "meta": {}, "status": "ok", "time": 314.29505348205566}
+ok 200: {"data": [{"avatarID": null, "badge": null, "blurb": null, "gRole": 0, "id": 5573564, "joined": "2014-12-02 17:04:33.804045", "level": 1, "slug": null, "status": 0, "username": null}], "meta": {}, "status": "ok", "time": 314.29505348205566}
 <b>TODO</b>
 
 
@@ -324,8 +324,24 @@ requestError 400 (more than 24 chars): {
 
 
 <h3><a id="rest-post-users" href="#rest-post-users">POST users</a> <span class="badge unnameduser">Unnamed user</span></h3>
+Used to set this users username and avatar for the first time.
+<h4><a id="rest-post-users-request" href="#rest-post-users-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li>Root object.
+    <ul>
+      <li class="string"><b>avatarID</b> - This user's first avatar. Value: <i class="string">base[01-15]</i></li>
+      <li class="string"><b>username</b> - This user's first username.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-users-response" href="#rest-post-users-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b> - Contains</li>
+</ul>
+
 request: {"avatarID": "base??", "username": "username"}
-ok 200: {"data": [{"avatarID": "base14", "badge": 0, "blurb": null, "gRole": 0, "id": id, "joined": "timestamp", "level": 1, "slug": "slug", "status": 0, "username": "username"}], "meta": {}, "status": "ok", "time": 51.74088478088379}<br />
+ok 200: {"data": [{"avatarID": "base14", "badge": null, "blurb": null, "gRole": 0, "id": id, "joined": "timestamp", "level": 1, "slug": "slug", "status": 0, "username": "username"}], "meta": {}, "status": "ok", "time": 51.74088478088379}<br />
 requestError 400 (both missing): {
   "data": [
     {
@@ -387,6 +403,18 @@ alreadySignedUp 403: {
   "meta": {},
   "status": "alreadySignedUp",
   "time": 1.6248226165771484
+}<br />
+requestError 400: {
+  "data": [
+    {
+      "avatarID": [
+        "avatarIDInvalid"
+      ]
+    }
+  ],
+  "meta": {},
+  "status": "requestError",
+  "time": 1.5020370483398438
 }
 
 <b>TODO</b>
@@ -396,7 +424,7 @@ alreadySignedUp 403: {
 Returns all public data about requested user.
 <h4><a id="rest-get-users-1-variables" href="#rest-get-users-1-variables">Request variables</a></h4>
 <ul class="jsondesc">
-<li class="integer"><b>$1</b> - The ID of the desired user.</li>
+  <li class="integer"><b>$1</b> - The ID of the desired user.</li>
 </ul>
 
 <h4><a id="rest-get-users-1-response" href="#rest-get-users-1-response">Response payload</a></h4>
@@ -406,7 +434,7 @@ Returns all public data about requested user.
       <li class="object">Root object.
         <ul>
           <li class="string"><b>avatarID</b> - User's avatar ID.</li>
-          <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
+          <li class="string"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
           <li class="string"><b>blurb</b> - User's blurb (description visible in his profile). Nullable.</li>
           <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a> Nullable.</li>
           <li class="integer"><b>id</b> - User's ID.</li>
@@ -984,7 +1012,7 @@ $1 - id of user to remove<br />
 
 <h3><a id="rest-delete-chat-1" href="#rest-delete-chat-1">DELETE chat/$1</a> <span class="badge isinroom">Is in room</span></h3>
 $1 - message id<br />
-spamthefuckoffable<br />
+spamthefuckoutofable<br />
 <b>TODO</b>
 
 
@@ -1517,7 +1545,7 @@ Sent when a user joins or refreshes. If this message was sent and that user is s
   <li class="object"><b>p</b>
     <ul>
       <li class="string"><b>avatarID</b> - Joining users avatar.</li>
-      <li class="integer"><b>badge</b> - Joining users <a href="#std-vars-badge">badge</a>.</li>
+      <li class="string"><b>badge</b> - Joining users <a href="#std-vars-badge">badge</a>.</li>
       <li class="string"><b>blurb</b> - Joining users blurb (description in users profile).</li>
       <li class="integer"><b>gRole</b> - Joining users <a href="#std-vars-global-role">global role</a>.</li>
       <li class="integer"><b>id</b> - Joining users ID.</li>
@@ -1586,13 +1614,15 @@ Integer representing users role on entire Plug.dj. It's worth noting that even t
 
 
 <h3><a id="std-vars-badge" href="std-vars-badge">Badge</a></h3>
-Integer representing users badge obtained by being a registered user before July 2014 and migrating your account or being a beta tester.
-<ul class="jsondesc">
-  <li class="integer"><b>0</b> - None</li>
-  <li class="integer"><b>1</b> - Beta Tester</li>
-  <li class="integer"><b>2</b> - Early Adopter</li>
-  <li class="integer"><b>3</b> - Original Gangster</li>
-  <li class="integer"><b>4</b> - Plug Superstar</li>
+String representing users badge. Originally obtained by being a registered user before July 2014 and migrating your account or being a beta tester and saved as integer. It's possible to buy them since Winter 2014 update (12/16/14). Below is NOT a complete list of badges. It contains only avatars that aren't possible to buy in store at all or ones that are limited time only.<ul class="jsondesc">
+  <li class="string"><b>null</b> - None</li> <!-- Originally 0 -->
+  <li class="string"><b>bt</b> - Beta Tester</li> <!-- Originally 1 -->
+  <li class="string"><b>ea</b> - Early Adopter</li> <!-- Originally 2 -->
+  <li class="string"><b>og</b> - Original Gangster</li> <!-- Originally 3 -->
+  <li class="string"><b>ss</b> - Plug Superstar</li> <!-- Originally 4 -->
+  <li class="string"><b>admin</b> - Plug.dj Admin</li>
+  <li class="string"><b>ba</b> - Plug.dj Brand Ambassador</li>
+  <li class="string"><b>plot</b> - Plug.dj Translator</li>
 </ul>
 
 
