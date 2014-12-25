@@ -183,7 +183,9 @@ These are the response statuses alone with their respective HTTP response codes 
 <ul class="jsondesc">
   <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
   <li class="string"><b>notAuthorized 401</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
-  <li class="string"><b>notAuthorized 401</b> - Returned from all endpoints but the ones marked <span class="badge unnameduser">Unnamed user</span> if this user is logged in but doesn't have a name yet.</li>
+  <li class="string"><b>notAuthorized 401</b> - Returned from all endpoints but the ones marked <span class="badge unnameduser">Unnamed user</span> if this user is logged in but doesn't have a name yet. <b>TODO: u sure?</b></li>
+  <li class="string"><b>notInRoom 400</b> - Returned from all endpoints marked with <span class="badge isinroom">Is in room</span> wehn this user isn't in a room. May be returned even if websocket is receiving messages from a room.</li>
+  <li class="string"><b>maintenanceMode 403</b> - Returned when plug.dj is in maintenance mode.</li>
   <li class="string"><b>*html 400 page* 400</b> - Invalid or empty http request payload.</li>
   <li class="string"><b>500 500</b> - Invalid or empty http request payload. Please note that the <b class="code">status</b> field is an integer in this case.</li>
   <li class="string"><b>*empty payload* 503</b> - Plug.dj is down. Expect this to happen <strike>from time to time</strike> constantly.</li>
@@ -253,7 +255,7 @@ Used for authenticating user using Plug.dj account.
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b>
     <ul>
-      <li class="object">Users object. See <a href="#rest-get-users-1-response">GET users/$1 <b class="code">ok 200</b> response payload</a>.</li>
+      <li class="object">Users object. See <a href="#rest-get-users-me-response">GET users/me <b class="code">ok 200</b> response payload</a>.</li>
     </ul>
   </li>
   <li class="array"><b>csrfTokenExpired 403</b> - CRSF token not specified, invalid or expired.
@@ -297,7 +299,7 @@ Returns an auth token used by WebSocket to authenticate to the server.
 
 
 <h3><a id="rest-post-users-signup" href="#rest-post-users-signup">POST users/signup</a> <span class="badge notauthed">Not authenticated</span></h3>
-request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"03AHJ_VuuCu3cYCj8h7Yr7CZj_r6Vm_5VKYqAcyenPvasYUt3mY1RkpfuOpM9H8zwjrXNWGbyXnJLZxUvauTAnf30oSC2NiVaAENi4mkpoCgw_EuTNrPmULXhnhyjsy1aY_teBvMChReoeGeBcW9qSXQ0-Hp58S0G8YKxq1ofXC4MdlKghZAJwdgaSX2ZxOu1QTfMS1BtJiRbdklH0wrefEc6etWiHMhc4ykVYULxG5qZfK8U34JriQWDQQMlq44pFZxrcgn3UCLjz5ngR64OHYaqqV1gCYJKITE4s5uBKpDtT1nzJfw6VvGalh-KMtvMAJvDMj5o57UPt","response":"captcha"}<br />
+request: {"csrf":"f000ea39af045ef7640adf33b1dc07708e1156361fc95a68b6d114e0025c","email":"email","password":"pass","confirm":"pass","challenge":"long challenge thingy","response":"captcha"}<br />
 ok 200: {"data": [{"avatarID": null, "badge": 0, "blurb": null, "gRole": 0, "id": 5573564, "joined": "2014-12-02 17:04:33.804045", "level": 1, "slug": null, "status": 0, "username": null}], "meta": {}, "status": "ok", "time": 314.29505348205566}
 <b>TODO</b>
 
@@ -405,15 +407,15 @@ Returns all public data about requested user.
         <ul>
           <li class="string"><b>avatarID</b> - User's avatar ID.</li>
           <li class="integer"><b>badge</b> - User's <a href="#std-vars-badge">badge ID.</a></li>
-          <li class="string"><b>blurb</b> - User's blurb (description visible in his profile).</li>
-          <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a></li>
+          <li class="string"><b>blurb</b> - User's blurb (description visible in his profile). Nullable.</li>
+          <li class="integer"><b>gRole</b> - User's <a href="#std-vars-global-role">global role.</a> Nullable.</li>
           <li class="integer"><b>id</b> - User's ID.</li>
           <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
           <li class="integer"><b>level</b> - User's experience level.</li>
           <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
-          <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
+          <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs. Nullable.</li>
           <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
-          <li class="string"><b>username</b> - User's name. May change.</li>
+          <li class="string"><b>username</b> - User's name. May change. Nullable.</li>
         </ul>
       </li>
     </ul>
@@ -492,6 +494,10 @@ Returns at most last 50 songs played by this user.
 </ul>
 
 
+<h3><a id="rest-get-users-me-transactions" href="#rest-get-users-me-transactions">GET users/me/transactions</a></h3>
+<b>TODO</b>
+
+
 <h3><a id="rest-post-users-bulk" href="#rest-post-users-bulk">POST users/bulk</a></h3>
 <b>TODO</b>
 
@@ -568,7 +574,7 @@ Used to change this user's language.
 
 
 <h3><a id="rest-put-profile-blurb" href="#rest-put-profile-blurb">PUT profile/blurb</a></h3>
-Used to change this user's blurb.
+Used to change this user's blurb (profile description).
 <h4><a id="rest-put-profile-blurb-request" href="#rest-put-profile-blurb-request">Request payload</a></h4>
 <ul class="jsondesc">
   <li class="object">Root object.
@@ -589,7 +595,47 @@ Used to change this user's blurb.
 
 
 <h3><a id="rest-get-rooms-q-1-page-2-limit-3" href="#rest-get-rooms-q-1-page-2-limit-3">GET rooms?q=$1&amp;page=$2&amp;limit=$3</a></h3>
-<b>TODO</b>
+<h4><a id="rest-get-rooms-q-1-page-2-limit-3-variables" href="#rest-get-rooms-q-1-page-2-limit-3-variables">Request variables</a></h4>
+<ul class="jsondesc">
+  <li class="string"><b>$1</b> - Search query.</li>
+  <li class="integer"><b>$2</b> - Page number.</li>
+  <li class="integer"><b>$3</b> - Maximum amount of rooms to return.</li>
+</ul>
+
+<h4><a id="rest-get-rooms-q-1-page-2-limit-3-response" href="#rest-get-rooms-q-1-page-2-limit-3-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="object"><b>ok 200</b>
+    <ul>
+      <li class="array"><b>data</b> - Array containing requested rooms.
+        <ul>
+          <li class="object">Root object.
+            <ul>
+              <li class="integer"><b>capacity</b> - Unknown. Nullable.</li>
+              <li class="string"><b>cid</b> - Room's current media's CID.</li>
+              <li class="string"><b>dj</b> - Room's current DJ's username.</li>
+              <li class="boolean"><b>favorite</b> - <i class="boolean">true</i> if this user favorited this room, <i class="boolean">false</i> otherwise.</li>
+              <li class="integer"><b>format</b> - Room's current media's source. See <a href="#std-vars-media-format">standard media formats</a>.</li>
+              <li class="string"><b>host</b> - Room's host's username.</li>
+              <li class="integer"><b>id</b> - Room's ID.</li>
+              <li class="string"><b>image</b> - Room's current media's thumbnail URL.</li>
+              <li class="string"><b>name</b> - Room's name.</li>
+              <li class="integer"><b>population</b> - Room's user count.</li>
+              <li class="boolean"><b>private</b> - Unknown. <b>TODO</b></li>
+              <li class="string"><b>slug</b> - Room's slug.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="object"><b>meta</b>
+        <ul>
+          <li class="integer"><b>limit</b> - Limit used for this request. Default: <i class="integer">50</i></li>
+          <li class="integer"><b>page</b> - Page returned this request.</li>
+          <li class="integer"><b>total</b> - Total amount of rooms on Plug.dj.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-rooms-favorites-page-1-limit-2" href="#rest-get-rooms-favorites-page-1-limit-2">GET rooms/favorites?page=$1&amp;limit=$2</a></h3>
@@ -706,6 +752,55 @@ Used to update rooms description, name and welcome message. At least one of the 
 
 
 <h3><a id="rest-get-rooms-state" href="#rest-get-rooms-state">GET rooms/state</a> <span class="badge isinroom">Is in room</span></h3>
+Used to get all data about room this user is currently in.
+<h4><a id="rest-get-rooms-state-response" href="#rest-get-rooms-state-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Root object.
+        <ul>
+          <li class="object"><b>booth</b>
+            <ul>
+              <li class="integer"><b>currentDJ</b> - Currently DJing user's ID.</li>
+              <li class="boolean"><b>isLocked</b> - </li>
+              <li class="boolean"><b>shouldCycle</b> - </li>
+              <li class="array"><b>waitingDJs</b> - An array containing IDs of users in wait list.</li>
+            </ul>
+          </li>
+          <li class="array"><b>fx</b> - <b>TODO</b></li>
+          <li class="array"><b>grabs</b> - An array containing IDs as strings of users who grabbed this song.</li>
+          <li class="object"><b>meta</b>
+            <ul>
+              <li class="string"><b>description</b> - Room's description.</li>
+              <li class="boolean"><b>favorite</b> - <i class="boolean">true</i> if this user favorited this room, <i class="boolean">false</i> otherwise.</li>
+              <li class="integer"><b>hostId</b> - Room's host's ID.</li>
+              <li class="string"><b>hostName</b> - Room's host's username.</li>
+              <li class="integer"><b>id</b> - Room's ID.</li>
+              <li class="integer"><b>population</b> - Amount of users in this room.</li>
+              <li class="string"><b>slug</b> - Room's slug.</li>
+              <li class="string"><b>welcome</b> - Room's welcome message. <i class="string">%u</i> is replaced by Plug.dj to this user's username.</li>
+            </ul>
+          </li>
+          <li class="object"><b>mutes</b> - Array of integers containing IDs of muted users as strings as keys and seconds until they're unmuted as values.</li>
+          <li class="object"><b>playback</b>
+            <ul>
+              <li class="string"><b>historyID</b> - Currently played song's history ID.</li>
+              <li class="object"><b>media</b> - See <a href="#std-objs-media">standard media object</a>.</li>
+              <li class="integer"><b>playlistID</b> - ID of the playlist currently played song is in.</li>
+              <li class="string"><b>startTime</b> - <a href="#std-vars-date">Date</a> of when currently played song started playing.</li>
+            </ul>
+          </li>
+          <li class="integer"><b>role</b> - This user's role in this room.</li>
+          <li class="array"><b>users</b> - Array containing all users in this room. <b>TODO: add format</b></li>
+          <li class="array"><b>votes</b> - Array containing IDs as strings of every user who voted as keys and value <i class="integer">1</i> if the user wooted for this song or <i class="integer">-1</i> if the user mehed.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+
+<h3><a id="rest-get-rooms-users" href="#rest-get-rooms-users">GET rooms/users</a> <span class="badge isinroom">Is in room</span></h3>
 <b>TODO</b>
 
 
@@ -888,7 +983,8 @@ $1 - id of user to remove<br />
 
 
 <h3><a id="rest-delete-chat-1" href="#rest-delete-chat-1">DELETE chat/$1</a> <span class="badge isinroom">Is in room</span></h3>
-$1 - message id
+$1 - message id<br />
+spamthefuckoffable<br />
 <b>TODO</b>
 
 
@@ -927,6 +1023,7 @@ doesnt validate reason
 
 <h3><a id="rest-post-bans-add" href="#rest-post-bans-add">POST bans/add</a> <span class="badge isinroom">Is in room</span></h3>
 <b>request</b>: {"userID":5334480,"reason":5,"duration":"h (hour), d (day), f (forever)"}<br />
+duration defaults to f<br />
 <b>response on banning yourself (400)</b>: {
   "data": [
     "Trying to ban yourself?"
@@ -1127,7 +1224,7 @@ when user id invald: {
 
 <h3><a id="rest-post-store-purchase" href="#rest-post-store-purchase">POST store/purchase</a></h3>
 {"id":74}<br />
-{"data": [{"count": 1, "ep": 30758, "name": "rock14"}], "meta": {}, "status": "ok", "time": 43.116092681884766}<br />
+{"data": [{"count": 1, "ep": 30758, "name": "rock14", "pp": 350}], "meta": {}, "status": "ok", "time": 43.116092681884766}<br />
 <b>TODO</b>
 
 
@@ -1259,7 +1356,13 @@ Sent every 5 minutes to update this users experience points and Plug Points. Thi
   </li>
 </ul>
 
+<h3><a id="sock-in-pp" href="#sock-in-pp">pp</a></h3>
+<b>TODO</b>
+
 <h3><a id="sock-in-floodchat" href="#sock-in-floodchat">floodChat</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-floodapi" href="#sock-in-floodapi">floodAPI</a></h3>
 <b>TODO</b>
 
 <h3><a id="sock-in-friendrequest" href="#sock-in-friendrequest">friendRequest</a></h3>
@@ -1508,6 +1611,13 @@ Integer representing users badge obtained by being a registered user before July
 </ul>
 
 
+<h3><a id="std-vars-media-format" href="std-vars-media-format">Media format</a></h3>
+<ul class="jsondesc">
+  <li class="integer"><b>1</b> - YouTube</li>
+  <li class="integer"><b>2</b> - SoundCloud</li>
+</ul>
+
+
 <h3><a id="std-vars-date" href="std-vars-date">Date</a></h3>
 Every date in Plug.dj's code uses the following format:<br />
 yyyy-mm-dd hh:mm:ss.iiiiii
@@ -1546,7 +1656,7 @@ Notification values for different notification types:
   <li class="object">Root object.
     <ul>
       <li class="string"><b>author</b> - Media's author.</li>
-      <li class="integer"><b>format</b> - Media's format. <i class="integer">1</i> if YouTube, <i class="integer">2</i> if SoundCloud.</li>
+      <li class="integer"><b>format</b> - Media's source. See <a href="#std-vars-media-format">standard media formats</a>.</li>
       <li class="string"><b>image</b> - Media's thumbnail URL.</li>
       <li class="string"><b>cid</b> - Media's ID (YouTube video or SoundCloud song ID).</li>
       <li class="integer"><b>duration</b> - Media's duration in seconds.</li>
@@ -1560,6 +1670,7 @@ Notification values for different notification types:
 </html>
 
 <!--
+= SOME incoming websocket messages
 ack
 advance
 ban
@@ -1569,7 +1680,9 @@ djListCycle
 djListLocked
 djListUpdate
 earn
+pp
 floodChat
+floodAPI
 friendRequest
 friendAccept
 grab
@@ -1626,4 +1739,66 @@ skip					v	"username of current dj"
 userJoin				v	{"username":"DrOktopus","status":0,"gRole":0,"level":1,"avatarID":"base14","joined":"2014-10-30 16:26:22.440357","slug":"droktopus","role":0,"badge":0,"id":5359750,"blurb":null}
 modAddDJ				v	{"m":"user adding","t":"user added"}
 modMoveDJ					{"u":"moved users username","m":"user who moved","o":old position,"n":new position}
+-->
+
+<!--
+== BADGES ORIGINAL     NEW
+bt           --        --
+ea           --        --
+og           --        --
+ss           --        --
+plot         --        --
+ba           --        --
+admin        --        --
+2014wbb      --        --
+music01    210 PN    45  PN
+music02    210 PN    45  PN
+music03    210 PN    45  PN
+music04    210 PN    45  PN
+winter01   1950PP    1950PP
+winter02   210 PN    45  PN
+winter03   210 PN    45  PN
+winter04   210 PN    45  PN
+winter05   210 PN    45  PN
+winter06   210 PN    45  PN
+winter07   3450PP    3450PP
+winter08   3450PP    3450PP
+winter09   3450PP    3450PP
+winter10   3450PP    3450PP
+food01     420 PN    85  PN
+food02     420 PN    85  PN
+food03     420 PN    85  PN
+food04     420 PN    85  PN
+food05     420 PN    85  PN
+food06     420 PN    85  PN
+food07     420 PN    85  PN
+animals01  420 PN    170 PN
+animals02  420 PN    170 PN
+animals03  420 PN    170 PN
+style01      -?      45  PN
+style02      -?      45  PN
+tiki01       --      45  PN
+tiki02       --      45  PN
+tiki03       --      45  PN
+tiki04       --      45  PN
+-->
+
+<!--
+== AVATARS
+= NAME            PRICE
+2014winter01      85  PN  | Pre 12/23/14 price change: 525PN
+2014winter02      85  PN  | Pre 12/23/14 price change: 525PN
+2014winter03      85  PN  | Pre 12/23/14 price change: 525PN
+2014winter04      260 PN  | Pre 12/23/14 price change: 960PN
+2014winter05      260 PN  | Pre 12/23/14 price change: 960PN
+2014winter06      260 PN  | Pre 12/23/14 price change: 960PN
+2014winter07      520 PN  | Pre 12/23/14 price change: 1735PN
+2014winter08      520 PN  | Pre 12/23/14 price change: 1735PN
+2014winter09      520 PN  | Pre 12/23/14 price change: 1735PN
+2014winter10      695 PN  | Pre 12/23/14 price change: 2600PN
+-->
+
+<!--
+== OTHER
+Winter Bundle 2014 2400PN | Pre 12/23/14 price change: 9000PN
 -->
