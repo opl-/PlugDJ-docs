@@ -742,6 +742,7 @@ Used to update rooms description, name and welcome message. At least one of the 
       <li class="string"><b>description</b> - New room description.</li>
       <li class="string"><b>name</b> - New room name.</li>
       <li class="string"><b>welcome</b> - New room welcome message.</li>
+      <li class="string"><b>minChatLevel</b> - New minimum chat level.</li>
     </ul>
   </li>
 </ul>
@@ -750,7 +751,7 @@ Used to update rooms description, name and welcome message. At least one of the 
 <ul class="jsondesc">
   <li class="array"><b>requestError 400</b> - At least one field is required.
     <ul>
-      <li class="string"><i class="string">At least 1 of these fields is required: name, description, welcome</i></li>
+      <li class="string"><i class="string">At least 1 of these fields is required: name, description, welcome, minChatLevel</i></li>
     </ul>
   </li>
   <li class="array"><b>requestError 400</b> - This user is not a staff member.
@@ -1552,6 +1553,9 @@ Sent when room's name changes.
 </ul>
 
 <h3><a id="sock-in-roomdescriptionupdate" href="#sock-in-roomdescriptionupdate">roomDescriptionUpdate</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-roomminchatlevelupdate" href="#sock-in-roomminchatlevelupdate">roomMinChatLevelUpdate</a></h3>
 <b>TODO</b>
 
 <h3><a id="sock-in-skip" href="#sock-in-skip">skip</a></h3>
