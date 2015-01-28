@@ -185,7 +185,7 @@ These are the response statuses alone with their respective HTTP response codes 
   <li class="string"><b>ok 200</b> - Successfully completed the request. Included in all response payloads, even if no data is returned.</li>
   <li class="string"><b>notAuthorized 401</b> - Authentication required. Returned when no <a href="#rest-standard-session">session</a> is supplied or the session identificator is invalid.</li>
   <li class="string"><b>notAuthorized 401</b> - Returned from all endpoints but the ones marked <span class="badge unnameduser">Unnamed user</span> if this user is logged in but doesn't have a name yet. <b>TODO: u sure?</b></li>
-  <li class="string"><b>notInRoom 400</b> - Returned from all endpoints marked with <span class="badge isinroom">Is in room</span> wehn this user isn't in a room. May be returned even if websocket is receiving messages from a room.</li>
+  <li class="string"><b>notInRoom 400</b> - Returned from all endpoints marked with <span class="badge isinroom">Is in room</span> when this user isn't in a room. May be returned even if websocket is receiving messages from a room.</li>
   <li class="string"><b>maintenanceMode 403</b> - Returned when plug.dj is in maintenance mode.</li>
   <li class="string"><b>*html 400 page* 400</b> - Invalid or empty http request payload.</li>
   <li class="string"><b>500 500</b> - Invalid or empty http request payload. Please note that the <b class="code">status</b> field is an integer in this case.</li>
