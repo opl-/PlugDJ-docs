@@ -1182,7 +1182,24 @@ request: {"ids":[243892442],"beforeID":0}<br />
 
 
 <h3><a id="rest-get-friends" href="#rest-get-friends">GET friends</a></h3>
-<b>TODO</b>
+<h4><a href="#rest-get-friends-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Everything but <b class="code">pVibes</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
+        <ul>
+          <li class="object"><b>room</b> - Present only if <b class="code">status</b> field's value is other than <i class="integer">6</i>.
+            <ul>
+              <li class="integer"><b>id</b> - ID of the room that user is in.</li>
+              <li class="string"><b>name</b> - Display name of the room that user is in.</li>
+              <li class="string"><b>slug</b> - Slug of the room that user is in.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-get-friends-invites" href="#rest-get-friends-invites">GET friends/invites</a></h3>
