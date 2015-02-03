@@ -1203,7 +1203,18 @@ request: {"ids":[243892442],"beforeID":0}<br />
 
 
 <h3><a id="rest-get-friends-invites" href="#rest-get-friends-invites">GET friends/invites</a></h3>
-<b>TODO</b>
+<h4><a href="#rest-get-friends-invites-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">In addition to the field listed below, contains all fields but <b class="code">badge</b>, <b class="code">blurb</b>, <b class="code">pVibes</b> and <b class="code">slug</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
+        <ul>
+          <li class="string"><b>timestamp</b> - Time of the friend request. See <a href="#std-vars-date">standard date format</a>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-post-friends" href="#rest-post-friends">POST friends</a></h3>
