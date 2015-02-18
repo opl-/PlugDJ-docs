@@ -455,6 +455,17 @@ Returns all data about this user.
           <li class="array"><b>notifications</b> - This user's notifications. See: <a href="#std-objs-notification">standard notification object</a>.</li>
           <li class="integer"><b>pp</b> - Amount of this user's Plug Notes.</li>
           <li class="boolean"><b>pw</b> - <i class="boolean">true</i> if this user can reset his password, <i class="boolean">false</i> otherwise. Related to Facebook authentication.</li>
+          <li class="object"><b>settings</b> - Contains some of this users settings.
+            <ul>
+              <li class="integer"><b>chatTimestamps</b> - Chat timestamp format. Values: <i class="integer">24</i> if 24 hour format, <i class="integer">12</i> if 12 hour format, <i class="integer">0</i> if disabled.</li>
+              <li class="boolean"><b>emoji</b> - <i class="boolean">true</i> if emojis are enabled, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>notifyDJ</b> - <i class="boolean">true</i> if notification about new DJ should be displayed on advance, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>notifyFriendJoin</b> - <i class="boolean">true</i> if notification about user on friends list should be displayed when they join, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>notifyScore</b> - <i class="boolean">true</i> if notification about votes for previous song should be displayed, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>tooltips</b> - <i class="boolean">true</i> if tooltips should be shown, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>videoOnly</b> - <i class="boolean">true</i> if video only mode is enabled, <i class="boolean">false</i> otherwise.</li>
+            </ul>
+          </li>
           <li class="integer"><b>xp</b> - Amount of this user's experience points.</li>
         </ul>
       </li>
@@ -588,6 +599,15 @@ Used to change this user's language.
     </ul>
   </li>
 </ul>
+
+
+<h3><a id="rest-put-users-settings" href="#rest-put-users-settings">PUT users/settings</a></h3>
+Used to change this user's settings.
+<h4><a id="rest-put-users-settings-request" href="rest-put-users-settings-request">Request payload</a></h4>
+<b>TODO</b>
+
+<h4><a id="rest-put-users-settings-response" href="rest-put-users-settings-response">Response payload</a></h4>
+<b>TODO</b>
 
 
 <h3><a id="rest-put-profile-blurb" href="#rest-put-profile-blurb">PUT profile/blurb</a></h3>
