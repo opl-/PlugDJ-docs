@@ -448,6 +448,7 @@ Returns all data about this user.
     <ul>
       <li class="object">Root object. In addition to the fields below, contains all fields from <a href="#rest-get-users-1-response">GET users/$1 <b class="code">200 ok</b> response payload</a>.
         <ul>
+          <li class="boolean"><b>canGift</b> - <i class="boolean">true</i> if this user can gift Plug Notes to other users, <i class="boolean">false</i> otherwise.</li>
           <li class="integer"><b>ep</b> - Amount of this user's Plug Points.</li>
           <li class="array"><b>ignores</b> - Array containing IDs of all users ignored by this user.</li>
           <li class="string"><b>language</b> - This user's <a href="#std-vars-language">language</a>.</li>
@@ -1316,6 +1317,10 @@ when user id invald: {
 <b>TODO</b>
 
 
+<h3><a id="rest-post-gift" href="#rest-post-gift">POST gift</a></h3>
+<b>TODO</b>
+
+
 <h3><a id="rest-delete-notifications-1" href="#rest-delete-notifications-1">DELETE notifications/$1</a></h3>
 <b>TODO</b>
 
@@ -1638,6 +1643,12 @@ Sent when a user leaves.
 <b>TODO</b>
 
 <h3><a id="sock-in-vote" href="#sock-in-vote">vote</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-gift" href="#sock-in-gift">gift</a></h3>
+<b>TODO</b>
+
+<h3><a id="sock-in-gifted" href="#sock-in-gifted">gifted</a></h3>
 <b>TODO</b>
 
 
