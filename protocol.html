@@ -429,7 +429,6 @@ Returns all public data about requested user.
           <li class="integer"><b>level</b> - User's experience level.</li>
           <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
           <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
-          <li class="integer"><b>status</b> - User's <a href="#std-vars-status">status</a>.</li>
           <li class="string"><b>username</b> - User's display name. May change.</li>
         </ul>
       </li>
@@ -547,32 +546,6 @@ Used to change this user's avatar.
   <li class="array"><b>requestError 400</b> - Missing <b class="code">id</b> field.
     <ul>
       <li class="string"><i class="string">id is required</i></li>
-    </ul>
-  </li>
-</ul>
-
-
-<h3><a id="rest-put-users-status" href="#rest-put-users-status">PUT users/status</a></h3>
-Used to change this user's status.
-<h4><a id="rest-put-users-status-request" href="#rest-put-users-status-request">Request payload</a></h4>
-<ul class="jsondesc">
-  <li class="object">Root object.
-    <ul>
-      <li class="integer"><b>status</b> - New <a href="#std-vars-status">status</a> for this user.</li>
-    </ul>
-  </li>
-</ul>
-
-<h4><a id="rest-put-users-status-response" href="#rest-put-users-status-response">Response payload</a></h4>
-<ul class="jsondesc">
-  <li class="array"><b>requestError 400</b> - Invalid <b class="code">status</b> value.
-    <ul>
-      <li class="string"><i class="string">invalidStatus</i></li>
-    </ul>
-  </li>
-  <li class="array"><b>requestError 400</b> - Missing <b class="code">status</b> field.
-    <ul>
-      <li class="string"><i class="string">status is required</i></li>
     </ul>
   </li>
 </ul>
@@ -1455,7 +1428,6 @@ Sent when some users data changes. Plug.dj's code doesn't remove any fields from
       <li class="integer"><b>id</b> - ID of the user who's state updated.</li>
       <li class="integer"><b>level</b> - That users new experience level.</li>
       <li class="string"><b>avatarID</b> - That users new avatar ID.</li>
-      <li class="integer"><b>status</b> - That users new <a href="#std-vars-status">status</a>.</li>
     </ul>
   </li>
 </ul>
@@ -1647,7 +1619,6 @@ Sent when a user joins or refreshes. If this message was sent and that user is s
       <li class="integer"><b>level</b> - Joining users experience level.</li>
       <li class="integer"><b>role</b> - Joining users <a href="#std-vars-role">role</a>.</li>
       <li class="string"><b>slug</b> - Joining users slug.</li>
-      <li class="integer"><b>status</b> - Joining users <a href="#std-vars-status">status</a>.</li>
       <li class="string"><b>username</b> - Joining users username.</li>
     </ul>
   </li>
@@ -1680,17 +1651,6 @@ Sent when a user leaves.
 <h1><a id="std" href="#std">Standards</a></h1>
 
 <h2><a id="std-vars" href="#std-vars">Variables</a></h2>
-<h3><a id="std-vars-status" href="std-vars-status">Status</a></h3>
-Integer representing users status.
-<ul class="jsondesc">
-  <li class="integer"><b>0</b> - Available</li>
-  <li class="integer"><b>1</b> - Away</li>
-  <li class="integer"><b>2</b> - Working</li>
-  <li class="integer"><b>3</b> - Gaming</li>
-  <li class="integer"><b>6</b> - Offline (friends list only)</li>
-</ul>
-
-
 <h3><a id="std-vars-role" href="std-vars-role">Role</a></h3>
 Integer representing users role in a room.
 <ul class="jsondesc">
