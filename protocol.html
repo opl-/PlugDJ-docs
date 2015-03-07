@@ -427,7 +427,6 @@ Returns all public data about requested user.
           <li class="integer"><b>id</b> - User's ID.</li>
           <li class="string"><b>joined</b> - User's join <a href="#std-vars-date">date</a>.</li>
           <li class="integer"><b>level</b> - User's experience level.</li>
-          <li class="array"><b>pVibes</b> - Not yet implemented by Plug.dj.</li>
           <li class="string"><b>slug</b> - User's name without some characters. Used for profile URLs.</li>
           <li class="string"><b>username</b> - User's display name. May change.</li>
         </ul>
@@ -1180,7 +1179,7 @@ request: {"ids":[243892442],"beforeID":0}<br />
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b>
     <ul>
-      <li class="object">Everything but <b class="code">pVibes</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
+      <li class="object">Everything from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a> and the fields below.
         <ul>
           <li class="object"><b>room</b> - Present only if <b class="code">status</b> field's value is other than <i class="integer">6</i>.
             <ul>
@@ -1201,7 +1200,7 @@ request: {"ids":[243892442],"beforeID":0}<br />
 <ul class="jsondesc">
   <li class="array"><b>ok 200</b>
     <ul>
-      <li class="object">In addition to the field listed below, contains all fields but <b class="code">badge</b>, <b class="code">blurb</b>, <b class="code">pVibes</b> and <b class="code">slug</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
+      <li class="object">In addition to the field listed below, contains all fields but <b class="code">badge</b>, <b class="code">blurb</b> and <b class="code">slug</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
         <ul>
           <li class="string"><b>timestamp</b> - Time of the friend request. See <a href="#std-vars-date">standard date format</a>.</li>
         </ul>
