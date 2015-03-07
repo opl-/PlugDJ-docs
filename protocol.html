@@ -1181,13 +1181,14 @@ request: {"ids":[243892442],"beforeID":0}<br />
     <ul>
       <li class="object">Everything from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a> and the fields below.
         <ul>
-          <li class="object"><b>room</b> - Present only if <b class="code">status</b> field's value is other than <i class="integer">6</i>.
+          <li class="object"><b>room</b> - Present only if the user is online. If the user is online but on dashboard fields <b class="code">id</b> and <b class="code">name</b> aren't present and value of <b class="code">slug</b> is <i class="string">dashboard</i>.
             <ul>
               <li class="integer"><b>id</b> - ID of the room that user is in.</li>
               <li class="string"><b>name</b> - Display name of the room that user is in.</li>
               <li class="string"><b>slug</b> - Slug of the room that user is in.</li>
             </ul>
           </li>
+          <li class="integer"><b>status</b> - <i class="integer">0</i> if the user is offline, field not present otherwise.</li>
         </ul>
       </li>
     </ul>
@@ -1203,6 +1204,7 @@ request: {"ids":[243892442],"beforeID":0}<br />
       <li class="object">In addition to the field listed below, contains all fields but <b class="code">badge</b>, <b class="code">blurb</b>, <b class="code">language</b> and <b class="code">slug</b> from <a href="#rest-get-users-1">GET users/$1 <b class="code">ok 200</b> response payload</a>.
         <ul>
           <li class="string"><b>timestamp</b> - Time of the friend request. See <a href="#std-vars-date">standard date format</a>.</li>
+          <li class="string"><b>status</b> - <i class="integer">0</i> if the user is offline, <i class="integer">1</i> otherwise.</li>
         </ul>
       </li>
     </ul>
