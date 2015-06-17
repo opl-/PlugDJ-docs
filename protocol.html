@@ -603,11 +603,16 @@ Used to change this user's blurb (profile description).
 
 
 <h3><a id="rest-get-rooms-q-1-page-2-limit-3" href="#rest-get-rooms-q-1-page-2-limit-3">GET rooms?q=$1&amp;page=$2&amp;limit=$3</a></h3>
+Search for communities.<br>
+If no Search query is given: List all rooms (sorted by population).<br>
+NSFW communities are listed despite the the user's "nsfw" setting (to be filtered client-side).<br>
+The search includes the communities' names, their host's name and the music played in that community in the past. See <a href="http://tech.plug.dj/2015/06/09/search-advances/">http://tech.plug.dj/2015/06/09/search-advances/</a> for more info.<br>
+The attribute defaults to <i>null</i>, but large rooms seem to have <i class="integer">5000</i>.
 <h4><a id="rest-get-rooms-q-1-page-2-limit-3-variables" href="#rest-get-rooms-q-1-page-2-limit-3-variables">Request variables</a></h4>
 <ul class="jsondesc">
-  <li class="string"><b>$1</b> - Search query.</li>
-  <li class="integer"><b>$2</b> - Page number.</li>
-  <li class="integer"><b>$3</b> - Maximum amount of rooms to return.</li>
+  <li class="string"><b>$1</b> - Search query. Default: <i>none</i></li>
+  <li class="integer"><b>$2</b> - Page number. Default: <i class="integer">1</i></li>
+  <li class="integer"><b>$3</b> - Maximum amount of rooms to return. Default: <i class="integer">50</i></li>
 </ul>
 
 <h4><a id="rest-get-rooms-q-1-page-2-limit-3-response" href="#rest-get-rooms-q-1-page-2-limit-3-response">Response payload</a></h4>
@@ -618,15 +623,16 @@ Used to change this user's blurb (profile description).
         <ul>
           <li class="object">Root object.
             <ul>
-              <li class="integer"><b>capacity</b> - Unknown. Nullable.</li>
+              <li class="integer"><b>capacity</b> - Maximum capacity of the room. Nullable.</li>
               <li class="string"><b>cid</b> - Room's current media's CID.</li>
               <li class="string"><b>dj</b> - Room's current DJ's username.</li>
-              <li class="boolean"><b>favorite</b> - <i class="boolean">true</i> if this user favorited this room, <i class="boolean">false</i> otherwise.</li>
+              <li class="boolean"><b>favorite</b> - Whether this user favorited this room.</li>
               <li class="integer"><b>format</b> - Room's current media's source. See <a href="#std-vars-media-format">standard media formats</a>.</li>
               <li class="string"><b>host</b> - Room's host's username.</li>
               <li class="integer"><b>id</b> - Room's ID.</li>
               <li class="string"><b>image</b> - Room's current media's thumbnail URL.</li>
               <li class="string"><b>name</b> - Room's name.</li>
+              <li class="boolean"><b>nsfw</b> - Whether the room is marked as NSFW.</li>
               <li class="integer"><b>population</b> - Room's user count.</li>
               <li class="boolean"><b>private</b> - Unknown. <b>TODO</b></li>
               <li class="string"><b>slug</b> - Room's slug.</li>
@@ -636,7 +642,7 @@ Used to change this user's blurb (profile description).
       </li>
       <li class="object"><b>meta</b>
         <ul>
-          <li class="integer"><b>limit</b> - Limit used for this request. Default: <i class="integer">50</i></li>
+          <li class="integer"><b>limit</b> - Limit used for this request.</li>
           <li class="integer"><b>page</b> - Page returned this request.</li>
           <li class="integer"><b>total</b> - Total amount of rooms on Plug.dj.</li>
         </ul>
@@ -647,7 +653,49 @@ Used to change this user's blurb (profile description).
 
 
 <h3><a id="rest-get-rooms-favorites-page-1-limit-2" href="#rest-get-rooms-favorites-page-1-limit-2">GET rooms/favorites?page=$1&amp;limit=$2</a></h3>
-<b>TODO</b>
+Returns a list of communities that the user marked as "favorite" (sorted by population within each page).<br>
+<small>In contrast to <a href="#rest-get-rooms-q-1-page-2-limit-3">GET rooms?q=$1&amp;page=$2&amp;limit=$3</a>, the DJ attribute is the user object of the DJ, instead of just his/her username.</small>
+<h4><a id="rest-get-rooms-q-1-page-2-limit-3-variables" href="#rest-get-rooms-q-1-page-2-limit-3-variables">Request variables</a></h4>
+<ul class="jsondesc">
+  <li class="integer"><b>$1</b> - Page number. Default: <i class="integer">1</i></li>
+  <li class="integer"><b>$2</b> - Maximum amount of rooms to return. Default: <i class="integer">50</i></li>
+</ul>
+
+<h4><a id="rest-get-rooms-q-1-page-2-limit-3-response" href="#rest-get-rooms-q-1-page-2-limit-3-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="object"><b>ok 200</b>
+    <ul>
+      <li class="array"><b>data</b> - Array containing requested rooms.
+        <ul>
+          <li class="object">Root object.
+            <ul>
+              <li class="integer"><b>capacity</b> - Maximum capacity of the room. Nullable.</li>
+              <li class="string"><b>cid</b> - Room's current media's CID.</li>
+              <li class="string"><b>dj</b> - Room's current DJ's User object. See <a href="#rest-get-users-1-response">GET users/$1 <b class="code">ok 200</b> response payload</a>.</li>
+              <li class="boolean"><b>favorite</b> - Whether this user favorited this room.</li>
+              <li class="integer"><b>format</b> - Room's current media's source. See <a href="#std-vars-media-format">standard media formats</a>.</li>
+              <li class="string"><b>host</b> - Room's host's username.</li>
+              <li class="integer"><b>id</b> - Room's ID.</li>
+              <li class="string"><b>image</b> - Room's current media's thumbnail URL.</li>
+              <li class="string"><b>name</b> - Room's name.</li>
+              <li class="boolean"><b>nsfw</b> - Whether the room is marked as NSFW.</li>
+              <li class="integer"><b>population</b> - Room's user count.</li>
+              <li class="boolean"><b>private</b> - Whether the room is private.</li>
+              <li class="string"><b>slug</b> - Room's slug.</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="object"><b>meta</b>
+        <ul>
+          <li class="integer"><b>limit</b> - Limit used for this request.</li>
+          <li class="integer"><b>page</b> - Page returned this request.</li>
+          <li class="integer"><b>total</b> - Total amount of rooms on Plug.dj.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-post-rooms" href="#rest-post-rooms">POST rooms</a></h3>
@@ -1167,7 +1215,38 @@ request: {"ids":[243892442],"beforeID":0}<br />
 
 
 <h3><a id="rest-put-playlists-1-media-update" href="#rest-put-playlists-1-media-update">PUT playlists/$1/media/update</a></h3>
-<b>TODO</b>
+Used to update songs' title and/or author.<br>
+Note that you can only do ca 15 requests per 10 seconds (and a few milliseconds, due to server delays) and will get 503 errors past that. It is possible to use up all 15 requests within one second.
+<h4><a id="rest-post-auth-login-request" href="#rest-post-auth-login-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>id</b> - The song's plug ID (not Youtube/Soundcloud ID).</li>
+      <li class="string"><b>author</b> - The new author. (not HTML escaped)</li>
+      <li class="string"><b>title</b> - The new title. (not HTML escaped)</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-auth-login-response" href="#rest-post-auth-login-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Media object.
+        <ul>
+          <li class="string"><b>id</b> - The song's plug ID (not Youtube/Soundcloud ID).</li>
+          <li class="string"><b>author</b> - The new author. (HTML escaped)</li>
+          <li class="string"><b>title</b> - The new title. (HTML escaped)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 503</b> - Service Temporarily Unavailable (Too many requests).
+    <ul>
+      <li class="string"><b>TODO</b></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-put-playlists-1-shuffle" href="#rest-put-playlists-1-shuffle">PUT playlists/$1/shuffle</a></h3>
