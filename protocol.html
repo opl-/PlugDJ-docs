@@ -1215,7 +1215,38 @@ request: {"ids":[243892442],"beforeID":0}<br />
 
 
 <h3><a id="rest-put-playlists-1-media-update" href="#rest-put-playlists-1-media-update">PUT playlists/$1/media/update</a></h3>
-<b>TODO</b>
+Used to update songs' title and/or author.<br>
+Note that you can only do ca 15 requests per 10 seconds (and a few milliseconds, due to server delays) and will get 503 errors past that. It is possible to use up all 15 requests within one second.
+<h4><a id="rest-post-auth-login-request" href="#rest-post-auth-login-request">Request payload</a></h4>
+<ul class="jsondesc">
+  <li class="object">Root object.
+    <ul>
+      <li class="string"><b>id</b> - The song's plug ID (not Youtube/Soundcloud ID).</li>
+      <li class="string"><b>author</b> - The new author. (not HTML escaped)</li>
+      <li class="string"><b>title</b> - The new title. (not HTML escaped)</li>
+    </ul>
+  </li>
+</ul>
+
+<h4><a id="rest-post-auth-login-response" href="#rest-post-auth-login-response">Response payload</a></h4>
+<ul class="jsondesc">
+  <li class="array"><b>ok 200</b>
+    <ul>
+      <li class="object">Media object.
+        <ul>
+          <li class="string"><b>id</b> - The song's plug ID (not Youtube/Soundcloud ID).</li>
+          <li class="string"><b>author</b> - The new author. (HTML escaped)</li>
+          <li class="string"><b>title</b> - The new title. (HTML escaped)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="array"><b>requestError 503</b> - Service Temporarily Unavailable (Too many requests).
+    <ul>
+      <li class="string"><b>TODO</b></li>
+    </ul>
+  </li>
+</ul>
 
 
 <h3><a id="rest-put-playlists-1-shuffle" href="#rest-put-playlists-1-shuffle">PUT playlists/$1/shuffle</a></h3>
